@@ -1,6 +1,9 @@
+import AddCustomer from "./MailCub/AddCustomer";
 import Login from "./MailCub/Login";
 import  SignUp  from "./MailCub/SignUp";
 import { Route,Routes } from "react-router";
+
+
 function App() {
   return (
     <>

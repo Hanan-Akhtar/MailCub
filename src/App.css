@@ -8,7 +8,6 @@ color: #00A95A;
   display: inline-block;
   text-decoration: none;
 }
-   
 /*  sign in page start here */
 .logo{
   margin-top: 30px;
@@ -19,17 +18,18 @@ color: #00A95A;
   flex-direction: column;
   align-items: center;
 }
-.sign-in .email{
-  margin-bottom: 20px;
-}
 .background-image{
   background-image: url('../src/Asserts/Images/login-image.jpeg');
   background-repeat: no-repeat;
-  background-size: cover; 
-  height: 100vh;
+  background-size: cover;
+  height: 100vh; 
 }
-
-
+.sign-in .email{
+  margin-bottom: 20px;
+}
+.sign-in .password{
+  margin-bottom: 20px;
+}
 
 @media screen and (max-width: 1230px) {
   .forgot {
@@ -52,34 +52,53 @@ color: #00A95A;
   margin-bottom: 20px;
 }
 .sign-up .first-name{
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 .sign-up .last-name{
-  margin-bottom: 10px;
-}
-.sign-up .email{
-  margin-bottom: 10px;
-}
-.sign-up .password{
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 .sign-up .phoneNumber{
+  margin-bottom: 20px;
+}
+.sign-up .password{
+  margin-bottom: 20px;
+}
+.sign-up .email{
+  margin-bottom: 20px;
+}
+.customer-type{
+  margin-bottom: 10px;
+}
+.industry-type{
   margin-bottom: 10px;
 }
 .Advance-feature{
   background-color: #CEF3E1;
   padding-top: 150px;
-  height: 100vh;
 }
-.Advance-feature  ul li{
+.Advance-feature ul li{
   list-style-type: none;
-  margin-bottom: 25px;
-      
+}
+.Advance-feature  .li-headings{
+  margin-left: -33px;
+}
+.Advance-feature h6{
+margin-top: 10px;
+}
+.password-valitation{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  justify-content: space-between;
 }
 .password-circle {
   width: 10px;
   height: 10px;
   border-radius: 50%; 
+}
+.password-valitation p{
+  margin-bottom: 0;
 }
 .valid {
   background-color: #00A95A; 
@@ -87,5 +106,26 @@ color: #00A95A;
 .invalid {
   background-color: gray; 
 }
-
+ /* add customer strt here  */
+ .sign-up .first-name{
+  margin-bottom: 20px;
+}
+.sign-up .last-name{
+  margin-bottom: 20px;
+}
+.sign-up .phoneNumber{
+  margin-bottom: 20px;
+}
+.sign-up .password{
+  margin-bottom: 20px;
+}
+.sign-up .email{
+  margin-bottom: 20px;
+}
+.customer-type{
+  margin-bottom: 10px;
+}
+.industry-type{
+  margin-bottom: 10px;
+}
 
