@@ -1,12 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import RoutesComponent from '../src/MailCub/HandleRoutes';
-
+import HandleRoutes from './MailCub/HandleRoutes';
 const App = () => {
-  return (
-  
-      <RoutesComponent />
-  
+  return (  
+      <HandleRoutes/>
   );
 };
 

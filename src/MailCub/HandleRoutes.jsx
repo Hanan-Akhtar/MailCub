@@ -1,27 +1,40 @@
 import React from 'react';
-import { Routes, Route, Link, useNavigate } from 'react-router-dom';
-import ClippedDrawer from './MainProfile';
 import AddCustomer from './AddCustomer';
 import DashBoard from './DashBoard';
-import SpportTicket from './SpportTicket';
 import Transection from './Transaction';
+import SupportTicket from './SpportTicket';
+import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
+import SignUp from './SignUp';
+import SignIn from './SignIn';
+import DashBoardLayOut from '../Layouts/DashBoardLayOut';
 
-const RoutesComponent = () => {
-  const navigate = useNavigate();
+const HandleRoutes = () => {
+  const dummyTokenArray = ['dummyToken123', 'anotherDummyToken456'];
 
-  const navigateToDashboard = () => {
-    navigate('/dashboard');
+  const Authentication = () => {
+    const storedToken = localStorage.getItem("token");
+
+    if (storedToken && (dummyTokenArray.includes(storedToken) || storedToken.startsWith('dummy'))) {
+      return null; 
+    } else {
+      return <Navigate to="/signIn" />;
+    }
   };
 
   return (
     <Routes>
-      <Route path="/dashboard" element={<ClippedDrawer heading="Dashboard"><DashBoard /></ClippedDrawer>} />
-      <Route path="/addcustomer" element={<ClippedDrawer heading="Add Customer"><AddCustomer /></ClippedDrawer>} />
-      <Route path="/spportTicket" element={<ClippedDrawer heading="Support Ticket"><SpportTicket /></ClippedDrawer>} />
-      <Route path="/transection" element={<ClippedDrawer heading="Transaction"><Transection /></ClippedDrawer>} />
+      <Route element={<DashBoardLayOut />}>
+        <Route path="/" element={<Authentication />} />
+        <Route path="/dashboard" element={<DashBoard />} />
+        <Route path="/addcustomer" element={<AddCustomer />} />
+        <Route path="/transection" element={<Transection />} />
+        <Route path="/supportTicket" element={<SupportTicket />} />
+      </Route>
+      <Route path="/" element={<Authentication />} />
+      <Route path='/signIn' element={<SignIn />} />
+      <Route path="/signup" element={<SignUp />} />
     </Routes>
-    
   );
 };
 
-export default RoutesComponent;
+export default HandleRoutes;
