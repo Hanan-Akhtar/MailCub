@@ -12,8 +12,7 @@ color: #00A95A;
 
 .sign-in{
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
 }
 .background-image{
   background-image: url('../src/Asserts/Images/login-image.jpeg');
@@ -34,8 +33,7 @@ color: #00A95A;
 /* sin up section strt here */
 .sign-up{
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
 }
 .sign-up .heading h2{
   margin-bottom: 10px;
@@ -91,13 +89,12 @@ margin-top: 10px;
   display: inline;
   margin-bottom: 0px;
 }
-.password-circle {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%; 
-}
+
 .password-valitation p{
   margin-bottom: 0;
+}
+.css-10650aq{
+  height: 700px;
 }
 .valid {
   background-color: #00A95A; 

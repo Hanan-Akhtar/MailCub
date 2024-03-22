@@ -1,5 +1,4 @@
 import * as React from 'react';
-import "../App.css";
 import { TextField } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -13,7 +12,9 @@ import brandLogo from '../Asserts/Images/logo.png';
 import { useState } from 'react';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CircleIcon from '@mui/icons-material/Circle';
-import axios from 'axios'; // Import Axios
+import axios from 'axios';
+import { useNavigate } from 'react-router';
+const navigate = useNavigate
 
 const SignUp = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -23,6 +24,21 @@ const SignUp = () => {
         number: false,
         length: false,
     });
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phoneNumber: '',
+        password: ''
+    });
+    const [errors, setErrors] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phoneNumber: '',
+        password: ''
+    });
+
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -31,6 +47,7 @@ const SignUp = () => {
     };
 
     const handlePasswordChange = (event) => {
+        handleInputChange(event)
         const password = event.target.value;
         const lowercaseRegex = /[a-z]/g;
         setPasswordValidation((prev) => ({ ...prev, lowercase: password.match(lowercaseRegex) !== null }));
@@ -41,104 +58,137 @@ const SignUp = () => {
         setPasswordValidation((prev) => ({ ...prev, length: password.length >= 8 }));
     };
 
-    const handleSignUp = async () => {
-        const firstName = document.getElementById('outlined-basic-first-name')?.value;
-        const lastName = document.getElementById('outlined-basic-last-name')?.value;
-        const email = document.getElementById('outlined-basic-email')?.value;
-        const phoneNumber = document.getElementById('outlined-basic-phoneNumber')?.value;
-        const password = document.getElementById('outlined-adornment-password')?.value;
-    
-        if (firstName && lastName && email && phoneNumber && password) {
-            try {
-                const response = await axios.post("https://schema.getpostman.com/json/collection/v2.1.0/collection.json", {
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    phoneNumber: phoneNumber,
-                    password: password
-                });
-    
-                console.log('SignUp successful:', response.data);
-            } catch (error) {
-                console.error('SignUp error:', error);
-            }
-        } else {
-            console.error('Form data is incomplete');
-        }
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        console.log(name, "test", value)
+        setFormData({ ...formData, [name]: value });
     };
-    
-    return (<>
+
+    const handleSignUp = async (event) => {
+        event.preventDefault();
+        const { firstName, lastName, email, phoneNumber, password } = formData;
+        const newErrors = { firstName: '', lastName: '', email: '', phoneNumber: '', password: '' };
+
+        if (!firstName) {
+            newErrors.firstName = 'First Name is required.';
+        }
+
+        if (!lastName) {
+            newErrors.lastName = 'Last Name is required.';
+        }
+
+        if (!email) {
+            newErrors.email = 'Email is required.';
+        }
+
+        if (!phoneNumber) {
+            newErrors.phoneNumber = 'Phone Number is required.';
+        }
+
+        if (!password) {
+            newErrors.password = 'Password is required.';
+        }
+
+        if (Object.values(newErrors).some((error) => error !== '')) {
+            setErrors(newErrors);
+            console.log("i'm signup", newErrors)
+            return;
+        }
+        const reqObj = {
+            first_name: firstName,
+            last_name: lastName,
+            email: email,
+            // phoneNumber: phoneNumber,
+            password: password
+        }
+        const headers = { "Content-Type": "application/json" }
+        try {
+            console.log('red')
+            const response = await axios.post("http://146.190.164.174:4000/api/admin/signup_admin", {
+                reqObj, headers
+            });
+            if (response.status === 200) {
+                localStorage.setItem('token', response.data.token);
+                console.log('SignUp successful:', response.data);
+                navigate('/signIn');
+            } else {
+                console.error('Error fetching data:', response.statusText);
+            }
+        } catch (error) {
+            console.error('SignUp error:', error);
+        }
+
+    };
+
+
+
+    return (
+
         <div className="row">
-            <div className="col-lg-7 " style={{ marginTop: "70px" }}>
+            <div className="col-lg-7">
                 <div className='container'>
                     <img className="logo" src={brandLogo} style={{ width: "20%" }} />
-                    <div className="sign-up">
-                        <div className='heading'>
-                            <h2>Get Started with a Forever Free plan</h2>
-                            <p>Sign up in a seconds. no credit card required.</p>
-                        </div>
-                        <form>
-                            <div className="d-flex justify-content-center">
-                                <TextField fullWidth className="first-name" sx={{
-                                    width: 500,
-                                    maxWidth: '100%',
-                                    '& label.Mui-focused': {
-                                        color: '#00A95A',
-                                    },
-                                    '& .MuiOutlinedInput-root': {
-                                        '&.Mui-focused fieldset': {
-                                            borderColor: '#00A95A',
-                                        },
-                                    },
-                                }} id="outlined-basic" label="First Name" type="text" variant="outlined" required />
+                    <div className="sign-up" >
+                        <div>
+                            <div className='heading'>
+                                <h2>Get Started with a Forever Free plan</h2>
+                                <p>Sign up in a seconds. no credit card required.</p>
                             </div>
-                            <div className="d-flex justify-content-center">
-                                <TextField fullWidth className="last-name" sx={{
-                                    width: 500,
-                                    maxWidth: '100%',
-                                    '& label.Mui-focused': {
-                                        color: '#00A95A',
-                                    },
-                                    '& .MuiOutlinedInput-root': {
-                                        '&.Mui-focused fieldset': {
-                                            borderColor: '#00A95A',
-                                        },
-                                    },
-                                }} id="outlined-basic" label="Last Name" type="text" variant="outlined" />
-                            </div>
-                            <div className="d-flex justify-content-center">
-                                <TextField fullWidth className="email" sx={{
-                                    width: 500,
-                                    maxWidth: '100%',
-                                    '& label.Mui-focused': {
-                                        color: '#00A95A',
-                                    },
-                                    '& .MuiOutlinedInput-root': {
-                                        '&.Mui-focused fieldset': {
-                                            borderColor: '#00A95A',
-                                        },
-                                    },
-                                }} id="outlined-basic" label="Email" type="email" variant="outlined" required />
-                            </div>
-                            <div className="d-flex justify-content-center">
-                                <TextField fullWidth className="phoneNumber" sx={{
-                                    width: 500,
-                                    maxWidth: '100%',
-                                    '& label.Mui-focused': {
-                                        color: '#00A95A',
-                                    },
-                                    '& .MuiOutlinedInput-root': {
-                                        '&.Mui-focused fieldset': {
-                                            borderColor: '#00A95A',
-                                        },
-                                    },
-                                }} id="outlined-basic" label="Phone Number" type="number" variant="outlined" required />
-                            </div>
-                            <div className="d-flex justify-content-center">
-                                <FormControl fullWidth
-                                    className="password"
-                                    sx={{
-                                        width: 500,
+                            <form onSubmit={handleSignUp}>
+                                <div className="input-container">
+                                    <TextField
+                                        fullWidth
+                                        className="first-name"
+                                        sx={{
+                                            maxWidth: '100%',
+                                            '& label.Mui-focused': {
+                                                color: '#00A95A',
+                                            },
+                                            '& .MuiOutlinedInput-root': {
+                                                '&.Mui-focused fieldset': {
+                                                    borderColor: '#00A95A',
+                                                },
+                                            },
+                                        }}
+                                        id="outlined-basic"
+                                        label="First Name"
+                                        type="text"
+                                        variant="outlined"
+                                        name="firstName"
+                                        onChange={handleInputChange}
+                                        error={!!errors.firstName}
+                                        helperText={errors.firstName}
+                                        required
+                                    />
+                                </div>
+                                <div className="input-container">
+                                    <TextField
+                                        fullWidth
+                                        className="last-name"
+                                        sx={{
+                                            maxWidth: '100%',
+                                            '& label.Mui-focused': {
+                                                color: '#00A95A',
+                                            },
+                                            '& .MuiOutlinedInput-root': {
+                                                '&.Mui-focused fieldset': {
+                                                    borderColor: '#00A95A',
+                                                },
+                                            },
+                                        }}
+                                        id="outlined-basic"
+                                        label="Last Name"
+                                        type="text"
+                                        variant="outlined"
+                                        name="lastName"
+                                        onChange={handleInputChange}
+                                        error={!!errors.lastName}
+                                        helperText={errors.lastName}
+                                        required
+                                    />
+                                </div>
+                                <div className="input-container">
+                                    <TextField fullWidth className="email" sx={{
                                         maxWidth: '100%',
                                         '& label.Mui-focused': {
                                             color: '#00A95A',
@@ -148,77 +198,126 @@ const SignUp = () => {
                                                 borderColor: '#00A95A',
                                             },
                                         },
+                                    }} id="outlined-basic" label="Email" type="email" variant="outlined" name="email"
+                                        onChange={handleInputChange}
+                                        error={!!errors.email}
+                                        helperText={errors.email}
+                                        required />
+                                </div>
+                                <div className="input-container">
+                                    <TextField fullWidth className="phoneNumber" sx={{
+                                        maxWidth: '100%',
+                                        '& label.Mui-focused': {
+                                            color: '#00A95A',
+                                        },
+                                        '& .MuiOutlinedInput-root': {
+                                            '&.Mui-focused fieldset': {
+                                                borderColor: '#00A95A',
+                                            },
+                                        },
+                                    }} id="outlined-basic" label="Phone Number" type="number" variant="outlined" name="phoneNumber"
+                                        onChange={handleInputChange}
+                                        error={!!errors.phoneNumber}
+                                        helperText={errors.phoneNumber}
+                                        required />
+                                </div>
+                                <div className="input-container">
+                                    <FormControl fullWidth
+                                        className="password"
+                                        sx={{
+                                            maxWidth: '100%',
+                                            '& label.Mui-focused': {
+                                                color: '#00A95A',
+                                            },
+                                            '& .MuiOutlinedInput-root': {
+
+                                                color: '#00A95A',
+                                            },
+                                            '& .MuiOutlinedInput-root': {
+                                                '&.Mui-focused fieldset': {
+                                                    borderColor: '#00A95A',
+                                                },
+                                            },
+                                        }}
+                                        variant="outlined"
+                                    >
+                                        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                                        <OutlinedInput
+                                            id="outlined-adornment-password"
+                                            type={showPassword ? 'text' : 'password'}
+                                            name='password'
+                                            endAdornment={
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        aria-label="toggle password visibility"
+                                                        onClick={handleClickShowPassword}
+                                                        onMouseDown={handleMouseDownPassword}
+                                                        edge="end"
+                                                    >
+                                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            }
+                                            label="Password"
+                                            onChange={handlePasswordChange}
+                                            error={!passwordValidation.lowercase || !passwordValidation.uppercase || !passwordValidation.number || !passwordValidation.length}
+                                            helperText={
+                                                (!passwordValidation.lowercase && "At least one lowercase character is required") +
+                                                (!passwordValidation.uppercase && " At least one uppercase character is required") +
+                                                (!passwordValidation.number && " At least one number is required") +
+                                                (!passwordValidation.length && " Password must be at least 8 characters long")
+                                            }
+                                        />
+
+                                    </FormControl>
+                                </div>
+                                <div className='container te-xt'>
+                                    <div className='right'>
+                                        <ul>
+                                            <li>
+                                                <CircleIcon style={{ color: passwordValidation.lowercase ? 'green' : 'grey', fontSize: 'small', marginRight: '10px' }} />
+                                                <p>One Lowercase Character</p>
+                                            </li>
+                                            <li>
+                                                <CircleIcon style={{ color: passwordValidation.uppercase ? 'green' : 'grey', fontSize: 'small', marginRight: '10px' }} />
+                                                <p>One Uppercase Character</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div className='left'>
+                                        <ul>
+                                            <li>
+                                                <CircleIcon style={{ color: passwordValidation.number ? 'green' : 'grey', fontSize: 'small', marginRight: '10px' }} />
+                                                <p>One Number </p>
+                                            </li>
+                                            <li>
+                                                <CircleIcon style={{ color: passwordValidation.length ? 'green' : 'grey', fontSize: 'small', marginRight: '10px' }} />
+                                                <p>8 minimum Character</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <p>By clicking, you agree to Terms of use, Privacy policy and Anti-spam policy</p>
+
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    fullWidth
+                                    sx={{
+                                        backgroundColor: "#00A95A",
+                                        marginTop: "20px",
+                                        '&:hover': {
+                                            backgroundColor: "#00753e",
+                                        },
                                     }}
-                                    variant="outlined"
                                 >
-                                    <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-                                    <OutlinedInput
-                                        id="outlined-adornment-password"
-                                        type={showPassword ? 'text' : 'password'}
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={handleClickShowPassword}
-                                                    onMouseDown={handleMouseDownPassword}
-                                                    edge="end"
-                                                >
-                                                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }
-                                        label="Password"
-                                        onChange={handlePasswordChange}
-                                    />
-                                </FormControl>
-                            </div>
-                            <div className='container te-xt'>
-                                <div className='right'>
-                                    <ul>
-                                        <li>
-                                            <CircleIcon style={{ color: passwordValidation.lowercase ? 'green' : 'grey', fontSize: 'small', marginRight: '10px' }} />
-                                            <p>One Lowercase Character</p>
-                                        </li>
-                                        <li>
-                                            <CircleIcon style={{ color: passwordValidation.uppercase ? 'green' : 'grey', fontSize: 'small', marginRight: '10px' }} />
-                                            <p>One Uppercase Character</p>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div className='left'>
-                                    <ul>
-                                        <li>
-                                            <CircleIcon style={{ color: passwordValidation.number ? 'green' : 'grey', fontSize: 'small', marginRight: '10px' }} />
-                                            <p>One Number </p>
-                                        </li>
-                                        <li>
-                                            <CircleIcon style={{ color: passwordValidation.length ? 'green' : 'grey', fontSize: 'small', marginRight: '10px' }} />
-                                            <p>8 minimum Character</p>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <p>By clicking, you agree to Terms of use, Privacy policy and Anti-spam policy</p>
+                                    Create my account
+                                </Button>
+                            </form>
 
-                            <Button
-                                variant="contained"
-                                sx={{
-                                    backgroundColor: "#00A95A",
-                                    marginTop: "20px",
-                                    '&:hover': {
-                                        backgroundColor: "#00753e",
-                                    },
-                                    width: "100%"
-                                }}
-                                onClick={handleSignUp} 
-                            >
-                                Create My Account
-                            </Button>
-                        </form>
-
+                        </div>
                     </div>
                 </div>
-
             </div>
             <div className="col-lg-5 Advance-feature d-flex d-none d-lg-flex">
                 <div className="container">
@@ -271,7 +370,7 @@ const SignUp = () => {
 
             </div>
         </div>
-    </>);
+    );
 }
 
 export default SignUp;

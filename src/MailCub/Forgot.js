@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Button, TextField } from '@mui/material';
-import logo from '../Images/logo.png';
+import logo from '../Asserts/Images/logo.png';
 import { Link } from 'react-router-dom';
+import "../App.css";
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
@@ -23,9 +24,9 @@ const ForgotPassword = () => {
         <>
             <div className="container-fluid ">
                 <div className="row">
-                    <div className=" col-md-6 col-lg-7">
+                    <div className="  col-lg-7">
                         <div className="lo-go">
-                            <Link to={`/login`}><img className='img-fluid' src={logo} alt="" /></Link>
+                            <Link to={`/login`}><img style={{width:"20%"}} className='img-fluid' src={logo} alt="" /></Link>
                         </div>
                         {/* ============= Form ============= */}
                         <div className='container resetpassword-form '>
@@ -43,7 +44,11 @@ const ForgotPassword = () => {
                                         required
                                     />
                                 </div>
-                                <Button className='btn-clr' type="submit" variant="contained" fullWidth>Submit</Button>
+                                <Button  type="submit" variant="contained" sx={{
+                                                backgroundColor: "#00A95A",
+                                                '&:hover': {
+                                                    backgroundColor: "#00753e",
+                                                }}} fullWidth>Submit</Button>
                                
                                 {emailFound && (
                                     <div className='mt-4'>
@@ -59,7 +64,11 @@ const ForgotPassword = () => {
                                                 required
                                             />
                                         </div>
-                                        <Button className='btn-clr' onClick={handleResetPassword} variant="contained" fullWidth>Reset Password</Button>
+                                        <Button sx={{
+                                                backgroundColor: "#00A95A",
+                                                '&:hover': {
+                                                    backgroundColor: "#00753e",
+                                                }}} onClick={handleResetPassword} variant="contained" fullWidth>Reset Password</Button>
                                     </div>
                                 )}
                                 {(!emailFound && email) && <p className='m-2'>No Email Found</p>}
@@ -68,11 +77,8 @@ const ForgotPassword = () => {
                         </div>
                     </div>
                     {/* ============ Right side Background ============== */}
-                    <div className="col-md-6 col-lg-5 p-0 d-none d-md-block">
-                        <div className="forget-img">
+                    <div className="col-lg-5 background-image d-flex d-none d-lg-flex"></div>
 
-                        </div>
-                    </div>
                 </div>
             </div>
         </>

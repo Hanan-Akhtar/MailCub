@@ -16,8 +16,7 @@ import ListItemText from '@mui/material/ListItemText';
 import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
-import brandLogo from '../Asserts/Images/logo.png';
-
+import brandLogo from "../Asserts/Images/logo.png"
 import { Link } from 'react-router-dom';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 
@@ -45,7 +44,7 @@ const ResponsiveDrawer = (props) => {
 
   const drawer = (
     <div>
-      <Toolbar><img src={brandLogo} style={{ width: '50px' }} /></Toolbar>
+      <Toolbar><img src={brandLogo} style={{ width: '50%' }} /></Toolbar>
       <Divider />
       <List>
         {[
@@ -122,7 +121,7 @@ const ResponsiveDrawer = (props) => {
           onTransitionEnd={handleDrawerTransitionEnd}
           onClose={handleDrawerClose}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true, 
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
@@ -142,10 +141,7 @@ const ResponsiveDrawer = (props) => {
           {drawer}
         </Drawer>
       </Box>
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
-      >
+      <Box>
         <Toolbar />
       </Box>
     </Box>
