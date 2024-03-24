@@ -8,7 +8,8 @@ import SignUp from './SignUp';
 import SignIn from './SignIn';
 import DashBoardLayOut from '../Layouts/DashBoardLayOut';
 import ForgotPassword from './Forgot';
-import { isAuthenticated, login, logout } from '../Layouts/Authentication'; // Update with the correct path to your authentication file
+import { isAuthenticated, login, logout } from '../Layouts/Authentication'; 
+import CustomPaginationActionsTable from './Customer'
 
 const HandleRoutes = () => {
 
@@ -25,6 +26,7 @@ const HandleRoutes = () => {
       <Route element={<DashBoardLayOut />}>
         <Route path="/" element={<Authentication />} />
         <Route path="/dashboard" element={<GridAutoFlow />} />
+        <Route path="/customer" element={<CustomPaginationActionsTable />} />
         <Route path="/addcustomer" element={<AddCustomer />} />
         <Route path="/transection" element={<Transection />} />
         <Route path="/supportTicket" element={<SupportTicket />} />

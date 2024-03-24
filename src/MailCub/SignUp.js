@@ -28,14 +28,12 @@ const SignUp = () => {
         firstName: '',
         lastName: '',
         email: '',
-        phoneNumber: '',
         password: ''
     });
     const [errors, setErrors] = useState({
         firstName: '',
         lastName: '',
         email: '',
-        phoneNumber: '',
         password: ''
     });
 
@@ -66,8 +64,8 @@ const SignUp = () => {
 
     const handleSignUp = async (event) => {
         event.preventDefault();
-        const { firstName, lastName, email, phoneNumber, password } = formData;
-        const newErrors = { firstName: '', lastName: '', email: '', phoneNumber: '', password: '' };
+        const { firstName, lastName, email, password } = formData;
+        const newErrors = { firstName: '', lastName: '', email: '', password: '' };
 
         if (!firstName) {
             newErrors.firstName = 'First Name is required.';
@@ -81,32 +79,27 @@ const SignUp = () => {
             newErrors.email = 'Email is required.';
         }
 
-        if (!phoneNumber) {
-            newErrors.phoneNumber = 'Phone Number is required.';
-        }
-
         if (!password) {
             newErrors.password = 'Password is required.';
         }
 
         if (Object.values(newErrors).some((error) => error !== '')) {
             setErrors(newErrors);
-            console.log("i'm signup", newErrors)
             return;
         }
+
         const reqObj = {
             first_name: firstName,
             last_name: lastName,
             email: email,
-            // phoneNumber: phoneNumber,
-            password: password
-        }
-        const headers = { "Content-Type": "application/json" }
+            password: password,
+            status: true // Include status field
+        };
+
+        const headers = { "Content-Type": "application/json" };
+
         try {
-            console.log('red')
-            const response = await axios.post("http://146.190.164.174:4000/api/admin/signup_admin", {
-                reqObj, headers
-            });
+            const response = await axios.post("http://146.190.164.174:4000/api/admin/signup_admin", reqObj, { headers });
             if (response.status === 200) {
                 localStorage.setItem('token', response.data.token);
                 console.log('SignUp successful:', response.data);
@@ -115,10 +108,10 @@ const SignUp = () => {
                 console.error('Error fetching data:', response.statusText);
             }
         } catch (error) {
-            console.error('SignUp error:', error);
+            console.error('SignUp error:', error.response);
         }
-
     };
+
 
 
 
@@ -202,23 +195,6 @@ const SignUp = () => {
                                         onChange={handleInputChange}
                                         error={!!errors.email}
                                         helperText={errors.email}
-                                        required />
-                                </div>
-                                <div className="input-container">
-                                    <TextField fullWidth className="phoneNumber" sx={{
-                                        maxWidth: '100%',
-                                        '& label.Mui-focused': {
-                                            color: '#00A95A',
-                                        },
-                                        '& .MuiOutlinedInput-root': {
-                                            '&.Mui-focused fieldset': {
-                                                borderColor: '#00A95A',
-                                            },
-                                        },
-                                    }} id="outlined-basic" label="Phone Number" type="number" variant="outlined" name="phoneNumber"
-                                        onChange={handleInputChange}
-                                        error={!!errors.phoneNumber}
-                                        helperText={errors.phoneNumber}
                                         required />
                                 </div>
                                 <div className="input-container">

@@ -31,49 +31,51 @@ const SignIn = () => {
 
     const handleSignIn = async (event) => {
         event.preventDefault();
-
+    
         setEmailError('');
         setPasswordError('');
-
+    
         let newEmailError = '';
         let newPasswordError = '';
-
+    
         if (!email) {
             newEmailError = 'Email is required.';
         }
-
+    
         if (!password) {
             newPasswordError = 'Password is required.';
         }
-
+    
         setEmailError(newEmailError);
         setPasswordError(newPasswordError);
-
+    
         if (newEmailError || newPasswordError) {
             return;
         }
-
+    
         setLoading(true);
-
+    
         try {
             const response = await axios.post("http://146.190.164.174:4000/api/app_api/login", {
-                email:email,
-                password:password
+                email: email,
+                password: password,
+                type: 0 
             });
             if (response.status === 200) {
                 localStorage.setItem('token', response.data.token);
                 console.log('Sign-in successful:', response.data);
                 navigate('/dashboard');
-
             } else {
                 console.error('Error fetching data:', response.statusText);
             }
         } catch (error) {
-            console.error('Sign-in error:', error);
+            console.error('Sign-in error:', error.response);
         } finally {
             setLoading(false);
         }
     };
+    
+
 
     return (
         <>

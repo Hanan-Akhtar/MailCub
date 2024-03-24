@@ -49,9 +49,7 @@ const ResponsiveDrawer = (props) => {
       <List>
         {[
           { menuItem: 'Dashboard', icon: <InboxIcon />, path: '/dashboard' },
-          { menuItem: 'Customer', icon: <AccountCircleIcon />, path: '/addcustomer' },
-          { menuItem: 'Support Ticket', icon: <MailIcon />, path: '/transection' },
-          { menuItem: 'Transaction', icon: <MailIcon />, path: '/supportTicket' },
+          { menuItem: 'Customer', icon: <AccountCircleIcon />, path: '/customer' },
         ].map((text, index) => (
           <ListItem
             key={text.menuItem}
