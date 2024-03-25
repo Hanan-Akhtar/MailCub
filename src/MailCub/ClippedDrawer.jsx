@@ -19,13 +19,23 @@ import Toolbar from '@mui/material/Toolbar';
 import brandLogo from "../Asserts/Images/logo.png"
 import { Link } from 'react-router-dom';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
+import { useState } from 'react';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
+import { logout } from './Logout';
+import { changePassword } from './ChangePassword'; 
+
+
 
 const drawerWidth = 240;
 
 const ResponsiveDrawer = (props) => {
   const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [isClosing, setIsClosing] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const userEmail = localStorage.getItem('email');
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -42,34 +52,64 @@ const ResponsiveDrawer = (props) => {
     }
   };
 
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleProfileMenuClose = () => {
+    setAnchorEl(null);
+  };
+  // handle logout
+  const handleLogout = async () => {
+    const success = await logout();
+    if (success) {
+      window.location.href = './sigIn';
+    } else {
+      console.error('Logout failed.');
+    }
+  };
+  // handle password change
+  const handleChangePassword = async () => {
+    const newPassword = prompt('Enter your new password:');
+    if (newPassword) {
+      const success = await changePassword(newPassword);
+      if (success) {
+        alert('Password changed successfully!');
+      } else {
+        alert('Failed to change password. Please try again.');
+      }
+    }
+  };
+
   const drawer = (
     <div>
-      <Toolbar><img src={brandLogo} style={{ width: '50%' }} /></Toolbar>
+      <Toolbar><Link to={"./signIn"}><img src={brandLogo} style={{ width: '50%' }} /></Link></Toolbar>
       <Divider />
       <List>
         {[
           { menuItem: 'Dashboard', icon: <InboxIcon />, path: '/dashboard' },
-          { menuItem: 'Customer', icon: <AccountCircleIcon />, path: '/customer' },
+          { menuItem: 'Customer', icon: <InboxIcon />, path: '/customer' },
+
         ].map((text, index) => (
           <ListItem
             key={text.menuItem}
             disablePadding
-            
+            sx={{
+              '&:hover': {
+                '& .MuiListItemIcon-root': {
+                  color: '#00A95A',
+                },
+                '& .MuiListItemText-primary': {
+                  color: '#00A95A',
+                },
+              },
+              textDecoration: 'none',
+              padding: 'none'
+            }}
           >
             <ListItemButton
               component={Link}
               to={text.path}
-              sx={{
-                '&:hover': {
-                  '& .MuiListItemIcon-root': {
-                    color: '#00A95A',
-                  },
-                  '& .MuiListItemText-primary': {
-                    color: '#00A95A',
-                  },
-                },
-                textDecoration: 'none',
-              }}
             >
               <ListItemIcon>
                 {index % 2 === 0 ? <AccessAlarmIcon /> : <MailIcon />}
@@ -79,6 +119,7 @@ const ResponsiveDrawer = (props) => {
           </ListItem>
         ))}
       </List>
+
       <Divider />
     </div>
   );
@@ -89,23 +130,66 @@ const ResponsiveDrawer = (props) => {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar
-  sx={{
-    backgroundColor: 'transparent',
-    boxShadow: 'none',
-  }}
->
-  <Toolbar>
-    <IconButton
-      color="#00A95A"
-      aria-label="open drawer"
-      edge="start"
-      onClick={handleDrawerToggle}
-      sx={{ mr: 2, display: { sm: 'none' } }}
-    >
-      <MenuIcon />
-    </IconButton>
-  </Toolbar>
-</AppBar>
+        sx={{
+          backgroundColor: 'transparent',
+          boxShadow: 'none',
+        }}
+      >
+        <Toolbar>
+          <IconButton
+            color="#00A95A"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: 'none' } }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <div style={{ flexGrow: 1 }} />
+          <div>
+            <IconButton
+              aria-label="account of current user"
+              aria-controls="profile-menu"
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="#adb5bd"
+            >
+              <AccountCircleIcon />
+            </IconButton>
+            <Menu
+              id="profile-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleProfileMenuClose}
+              PaperProps={{
+                sx: {
+                  '& .MuiMenuItem-root': {
+                    '&:hover': {
+                      color: '#00A95A', 
+                    },
+                  },
+                },
+              }}
+            >
+              <MenuItem onClick={handleProfileMenuClose}>
+                <Typography variant="inherit" noWrap>
+                  {userEmail}
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleChangePassword}>
+                <Typography variant="inherit" noWrap>
+                  Change Password
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>
+                <Typography variant="inherit" noWrap>
+                  Logout
+                </Typography>
+              </MenuItem>
+            </Menu>
+          </div>
+        </Toolbar>
+      </AppBar>
 
       <Box
         component="nav"
@@ -119,7 +203,7 @@ const ResponsiveDrawer = (props) => {
           onTransitionEnd={handleDrawerTransitionEnd}
           onClose={handleDrawerClose}
           ModalProps={{
-            keepMounted: true, 
+            keepMounted: true,
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },

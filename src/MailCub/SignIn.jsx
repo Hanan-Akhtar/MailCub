@@ -21,6 +21,7 @@ const SignIn = () => {
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [signInError, setSignInError] = useState('');
     const navigate = useNavigate();
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -34,6 +35,7 @@ const SignIn = () => {
     
         setEmailError('');
         setPasswordError('');
+        setSignInError('');
     
         let newEmailError = '';
         let newPasswordError = '';
@@ -59,24 +61,31 @@ const SignIn = () => {
             const response = await axios.post("http://146.190.164.174:4000/api/app_api/login", {
                 email: email,
                 password: password,
-                type: 0 
+                type: 0
             });
             if (response.status === 200) {
                 localStorage.setItem('token', response.data.token);
+                localStorage.setItem('email', email);
                 console.log('Sign-in successful:', response.data);
                 navigate('/dashboard');
             } else {
                 console.error('Error fetching data:', response.statusText);
+                setSignInError('Invalid email or password.');
+
             }
         } catch (error) {
             console.error('Sign-in error:', error.response);
+            if (error.response.status === 400 ) {
+                setSignInError('Invalid email or password.');
+            } else {
+                setSignInError('Sign-in failed. Please try again later.');
+            }
         } finally {
             setLoading(false);
         }
     };
     
-
-
+    
     return (
         <>
             <div className="row">
@@ -160,9 +169,11 @@ const SignIn = () => {
                                                 }}
                                             />
                                         </FormControl>
-                                        {passwordError && <p className="error-message">{passwordError}</p>}
                                     </div>
                                     <Link to="/forgot" className="greenColor links forgot" >Forgot your password ?</Link>
+                                    
+                                    {signInError && <p className="error-message">{signInError}</p>}
+                                    {passwordError && <p className="error-message">{passwordError}</p>}
 
                                     <div className="d-flex justify-content-center">
                                         {loading ? (
@@ -185,6 +196,7 @@ const SignIn = () => {
                                                 Sign in
                                             </Button>
                                         )}
+                                        
                                     </div>
                                 </form>
                             </div>

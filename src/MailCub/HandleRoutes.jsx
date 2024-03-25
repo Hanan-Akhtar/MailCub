@@ -1,15 +1,14 @@
 import React from 'react';
 import AddCustomer from './AddCustomer';
 import GridAutoFlow from './DashBoard';
-import Transection from './Transaction';
-import SupportTicket from './SpportTicket';
-import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import SignUp from './SignUp';
 import SignIn from './SignIn';
 import DashBoardLayOut from '../Layouts/DashBoardLayOut';
 import ForgotPassword from './Forgot';
-import { isAuthenticated, login, logout } from '../Layouts/Authentication'; 
-import CustomPaginationActionsTable from './Customer'
+import { isAuthenticated, login, logout } from './Auth'; 
+import ColumnGroupingTable from './Customer'
+import Authenticated from '../Layouts/Authentication';
 
 const HandleRoutes = () => {
 
@@ -26,15 +25,15 @@ const HandleRoutes = () => {
       <Route element={<DashBoardLayOut />}>
         <Route path="/" element={<Authentication />} />
         <Route path="/dashboard" element={<GridAutoFlow />} />
-        <Route path="/customer" element={<CustomPaginationActionsTable />} />
+        <Route path="/customer" element={<ColumnGroupingTable />} />
         <Route path="/addcustomer" element={<AddCustomer />} />
-        <Route path="/transection" element={<Transection />} />
-        <Route path="/supportTicket" element={<SupportTicket />} />
       </Route>
+      <Route element={<Authenticated/>}>
       <Route path="/" element={<Authentication />} />
       <Route path='/signIn' element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path='/forgot' element={<ForgotPassword/>}/>
+      </Route>
     </Routes>
   );
 };

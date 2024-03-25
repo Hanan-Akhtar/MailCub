@@ -93,7 +93,7 @@ const SignUp = () => {
             last_name: lastName,
             email: email,
             password: password,
-            status: true // Include status field
+            status: true 
         };
 
         const headers = { "Content-Type": "application/json" };
@@ -118,7 +118,7 @@ const SignUp = () => {
     return (
 
         <div className="row">
-            <div className="col-lg-7">
+            <div className="col-lg-7 d-flex align-items-center">
                 <div className='container'>
                     <img className="logo" src={brandLogo} style={{ width: "20%" }} />
                     <div className="sign-up" >

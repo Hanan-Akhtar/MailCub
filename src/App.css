@@ -1,127 +1,163 @@
-.greenColor{
-color: #00A95A;
-}  
-.greenColor:hover{
+.greenColor {
+  color: #00A95A;
+}
+
+.greenColor:hover {
   color: #00753e;
-  }  
-.links{
+}
+
+.links {
   display: inline-block;
   text-decoration: none;
 }
+
 /*  sign in page start here */
 
-.sign-in{
+.sign-in {
   display: flex;
   justify-content: center;
 }
-.background-image{
+
+.background-image {
   background-image: url('../src/Asserts/Images/login-image.jpeg');
   background-repeat: no-repeat;
   background-size: cover;
-  height: 100vh; 
+  height: 100vh;
 }
-.sign-in .email{
+
+.sign-in .email {
   margin-bottom: 20px;
 }
-.sign-in .password{
+
+.sign-in .password {
   margin-bottom: 20px;
 }
-.forgot{
+
+.forgot {
   display: flex;
   justify-content: end;
 }
+.error-message {
+  color: #d32f2f;
+}
+
 /* sin up section strt here */
-.sign-up{
+.sign-up {
   display: flex;
   justify-content: center;
 }
-.sign-up .heading h2{
+
+.sign-up .heading h2 {
   margin-bottom: 10px;
 }
-.sign-up .heading p{
+
+.sign-up .heading p {
   margin-bottom: 20px;
 }
-.sign-up .first-name{
+
+.sign-up .first-name {
   margin-bottom: 20px;
 }
-.sign-up .last-name{
+
+.sign-up .last-name {
   margin-bottom: 20px;
 }
-.sign-up .phoneNumber{
+
+.sign-up .phoneNumber {
   margin-bottom: 20px;
 }
-.sign-up .password{
+
+.sign-up .password {
   margin-bottom: 20px;
 }
-.sign-up .email{
+
+.sign-up .email {
   margin-bottom: 20px;
 }
-.customer-type{
+
+.customer-type {
   margin-bottom: 10px;
 }
-.industry-type{
+
+.industry-type {
   margin-bottom: 10px;
 }
-.Advance-feature{
+
+.Advance-feature {
   background-color: #CEF3E1;
   padding-top: 150px;
 }
-.Advance-feature ul li{
+
+.Advance-feature ul li {
   list-style-type: none;
 }
-.Advance-feature  .li-headings{
+
+.Advance-feature .li-headings {
   margin-left: -33px;
 }
-.Advance-feature h6{
-margin-top: 10px;
+
+.Advance-feature h6 {
+  margin-top: 10px;
 }
-.te-xt{
+
+.te-xt {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 5px;
 }
 
-.te-xt ul li{
+.te-xt ul li {
   list-style-type: none;
 }
-.te-xt ul li p{
+
+.te-xt ul li p {
   display: inline;
   margin-bottom: 0px;
 }
 
-.password-valitation p{
+.password-valitation p {
   margin-bottom: 0;
 }
-.css-10650aq{
+
+.css-10650aq {
   height: 700px;
 }
+
 .valid {
-  background-color: #00A95A; 
+  background-color: #00A95A;
 }
+
 .invalid {
-  background-color: gray; 
+  background-color: gray;
 }
- /* add customer strt here  */
- .sign-up .first-name{
+
+/* add customer strt here  */
+.sign-up .first-name {
   margin-bottom: 20px;
 }
-.sign-up .last-name{
+
+.sign-up .last-name {
   margin-bottom: 20px;
 }
-.sign-up .phoneNumber{
+
+.sign-up .phoneNumber {
   margin-bottom: 20px;
 }
-.sign-up .password{
+
+.sign-up .password {
   margin-bottom: 20px;
 }
-.sign-up .email{
+
+.sign-up .email {
   margin-bottom: 20px;
 }
-.customer-type{
-  margin-bottom: 10px;
-}
-.industry-type{
+
+.customer-type {
   margin-bottom: 10px;
 }
 
+.industry-type {
+  margin-bottom: 10px;
+}
+ 
