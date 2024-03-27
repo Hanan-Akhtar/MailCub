@@ -62,24 +62,29 @@ export default function StickyHeadTable() {
     }
   };
 
-  const handleDeleteCustomer = async (customerId) => {
+  const handleDeleteCustomer = async (userId) => {
     try {
       const token = localStorage.getItem('token');
       const headers = {
         'x-sh-auth': token,
       };
-
-      // Make API call to delete customer
-      await axios.delete(
-        `http://146.190.164.174:4000/api/customer/delete_customer/${customerId}`,
+  
+      const response = await axios.delete(
+        `http://146.190.164.174:4000/api/customer/delete_customer/${userId}`,
         { headers: headers }
       );
-
-      fetchCustomers();
+  
+      if (response.status === 200) {
+        fetchCustomers();
+      } else {
+        console.error('Failed to delete customer:', response.data);
+      }
     } catch (error) {
-      console.error('Error deleting customer:', error);
+      console.error('Error deleting customer:', error.response);
     }
   };
+
+  
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -142,7 +147,7 @@ export default function StickyHeadTable() {
                         variant="outlined"
                         color="error"
                         startIcon={<DeleteIcon />}
-                        onClick={() => handleDeleteCustomer(row._id)}
+                        onClick={() => handleDeleteCustomer(row.user_id)}
                       >
                         Delete
                       </Button>
