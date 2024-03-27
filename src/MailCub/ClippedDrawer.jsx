@@ -19,22 +19,26 @@ import Toolbar from '@mui/material/Toolbar';
 import brandLogo from "../Asserts/Images/logo.png"
 import { Link } from 'react-router-dom';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
-import { useState } from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { logout } from './Logout';
-import { changePassword } from './ChangePassword'; 
-
-
+import ChangePasswordForm from './ChangePassword'; 
+import { useNavigate } from 'react-router-dom';
+import Modal from '@mui/material/Modal';
+import { useState } from 'react'; 
 
 const drawerWidth = 240;
 
 const ResponsiveDrawer = (props) => {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
+  const [isClosing, setIsClosing] =useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const userEmail = localStorage.getItem('email');
 
   const handleDrawerClose = () => {
@@ -59,37 +63,85 @@ const ResponsiveDrawer = (props) => {
   const handleProfileMenuClose = () => {
     setAnchorEl(null);
   };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   // handle logout
+  const navigate = useNavigate();
   const handleLogout = async () => {
-    const success = await logout();
+    const success = await logout(navigate);
     if (success) {
-      window.location.href = './sigIn';
+      navigate( './signIn');
     } else {
       console.error('Logout failed.');
     }
   };
+
   // handle password change
   const handleChangePassword = async () => {
-    const newPassword = prompt('Enter your new password:');
-    if (newPassword) {
-      const success = await changePassword(newPassword);
+    try {
+      const token = localStorage.getItem('token');
+      const success = await ChangePasswordForm({
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+        token: token
+      });
       if (success) {
         alert('Password changed successfully!');
+        setIsModalOpen(false); 
       } else {
         alert('Failed to change password. Please try again.');
       }
+    } catch (error) {
+      console.error('Error changing password:', error.response);
+      alert('Failed to change password. Please try again.');
     }
   };
 
   const drawer = (
     <div>
-      <Toolbar><Link to={"./signIn"}><img src={brandLogo} style={{ width: '50%' }} /></Link></Toolbar>
+      <Toolbar>
+        <Link to={"./signIn"}><img src={brandLogo} style={{ width: '50%' }} /></Link>
+      </Toolbar>
       <Divider />
+      <List>
+        <ListItem
+          key={'Profile'}
+          disablePadding
+          sx={{
+            '&:hover': {
+              '& .MuiListItemIcon-root': {
+                color: '#00A95A',
+              },
+              '& .MuiListItemText-primary': {
+                color: '#00A95A',
+              },
+            },
+            textDecoration: 'none',
+            padding: 'none'
+          }}
+        >
+          <ListItemButton
+            component={Link}
+            to={'/profile'}
+          >
+            <ListItemIcon>
+              <AccountCircleIcon />
+            </ListItemIcon>
+            <ListItemText primary={'Profile'} />
+          </ListItemButton>
+        </ListItem>
+      </List>
       <List>
         {[
           { menuItem: 'Dashboard', icon: <InboxIcon />, path: '/dashboard' },
           { menuItem: 'Customer', icon: <InboxIcon />, path: '/customer' },
-
         ].map((text, index) => (
           <ListItem
             key={text.menuItem}
@@ -119,10 +171,10 @@ const ResponsiveDrawer = (props) => {
           </ListItem>
         ))}
       </List>
-
-      <Divider />
     </div>
   );
+  
+
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
@@ -176,7 +228,7 @@ const ResponsiveDrawer = (props) => {
                   {userEmail}
                 </Typography>
               </MenuItem>
-              <MenuItem onClick={handleChangePassword}>
+              <MenuItem onClick={handleOpenModal}>
                 <Typography variant="inherit" noWrap>
                   Change Password
                 </Typography>
@@ -188,7 +240,8 @@ const ResponsiveDrawer = (props) => {
               </MenuItem>
             </Menu>
           </div>
-        </Toolbar>
+       
+          </Toolbar>
       </AppBar>
 
       <Box
@@ -226,6 +279,35 @@ const ResponsiveDrawer = (props) => {
       <Box>
         <Toolbar />
       </Box>
+      <Modal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        aria-labelledby="change-password-modal"
+        aria-describedby="change-password-modal-description"
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <ChangePasswordForm
+            oldPassword={oldPassword}
+            newPassword={newPassword}
+            setOldPassword={setOldPassword}
+            setNewPassword={setNewPassword}
+            setConfirmPassword={setConfirmPassword}
+            handleChangePassword={handleChangePassword}
+          />
+        </Box>
+      </Modal>
     </Box>
   );
 }

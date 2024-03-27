@@ -14,9 +14,14 @@ const Dashboard = () => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://146.190.164.174:4000/api/');
+            const token=localStorage.getItem("token")
+            const headers = {
+              'x-sh-auth': token,
+          };
+            const response = await axios.get('http://146.190.164.174:4000/api/customer/get_customers', { headers: headers });
             setVerifiedDomains(response.data.verified);
             setUnverifiedDomains(response.data.unverified);
+            console.log("successful",response.data)
         } catch (error) {
             console.error('Error fetching domain data:', error.response);
         }

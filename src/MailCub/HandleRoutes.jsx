@@ -12,11 +12,17 @@ import Authenticated from '../Layouts/Authentication';
 
 const HandleRoutes = () => {
 
-  const Authentication = () => {
+  const Authentication = ({ path }) => {
     if (isAuthenticated()) {
       return null;
     } else {
-      return <Navigate to="/signIn" />;
+      // Redirect to sign-in page if not authenticated
+      if (path !== '/signIn') {
+        // Only redirect if the current path is not the sign-in page
+        return <Navigate to="/signIn" />;
+      } else {
+        return null; // Render nothing if already on the sign-in page
+      }
     }
   };
 

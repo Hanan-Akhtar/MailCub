@@ -14,7 +14,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CircleIcon from '@mui/icons-material/Circle';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
-const navigate = useNavigate
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 const SignUp = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -36,7 +37,8 @@ const SignUp = () => {
         email: '',
         password: ''
     });
-
+    const [successMessage, setSuccessMessage] = useState('');
+    const navigate = useNavigate();
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -58,7 +60,6 @@ const SignUp = () => {
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        console.log(name, "test", value)
         setFormData({ ...formData, [name]: value });
     };
 
@@ -93,7 +94,7 @@ const SignUp = () => {
             last_name: lastName,
             email: email,
             password: password,
-            status: true 
+            status: true
         };
 
         const headers = { "Content-Type": "application/json" };
@@ -102,13 +103,27 @@ const SignUp = () => {
             const response = await axios.post("http://146.190.164.174:4000/api/admin/signup_admin", reqObj, { headers });
             if (response.status === 200) {
                 localStorage.setItem('token', response.data.token);
-                console.log('SignUp successful:', response.data);
+                setSuccessMessage('Account created successfully!');
                 navigate('/signIn');
             } else {
                 console.error('Error fetching data:', response.statusText);
             }
         } catch (error) {
             console.error('SignUp error:', error.response);
+
+            if (error.response && error.response.data && error.response.data.errors) {
+                const apiErrors = error.response.data.errors;
+                Object.keys(apiErrors).forEach((key) => {
+                    if (key in newErrors) {
+                        newErrors[key] = apiErrors[key];
+                    }
+                });
+                setErrors(newErrors);
+            } else if (error.response && error.response.data && error.response.data.message) {
+                setErrors({ ...newErrors, general: error.response.data.message });
+            } else {
+                setErrors({ ...newErrors, general: 'An unexpected error occurred. Please try again later.' });
+            }
         }
     };
 
@@ -274,6 +289,19 @@ const SignUp = () => {
                                     </div>
                                 </div>
                                 <p>By clicking, you agree to Terms of use, Privacy policy and Anti-spam policy</p>
+                                {Object.values(errors).some(error => error !== '') && (
+                                    <Alert severity="error">
+                                        {Object.values(errors).map((error, index) => (
+                                            <div key={index}>{error}</div>
+                                        ))}
+                                    </Alert>
+                                )}
+                                {successMessage && (
+                                    <Alert severity="success">
+                                        <AlertTitle>successfully create account</AlertTitle>
+                                        {successMessage}
+                                    </Alert>
+                                )}
 
                                 <Button
                                     type="submit"
@@ -345,6 +373,8 @@ const SignUp = () => {
                 </div>
 
             </div>
+
+
         </div>
     );
 }

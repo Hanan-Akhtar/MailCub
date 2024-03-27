@@ -1,6 +1,6 @@
 import * as React from 'react';
 import "../App.css";
-import { TextField, } from "@mui/material";
+import { TextField, Snackbar } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -11,6 +11,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Button from '@mui/material/Button';
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router';
 
 const AddCustomer = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -18,10 +19,11 @@ const AddCustomer = () => {
         firstName: '',
         lastName: '',
         email: '',
-        industryType: '',
         password: '',
-        customerType: ''
     });
+    const [successAlert, setSuccessAlert] = useState(false);
+    const [errorAlert, setErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -35,83 +37,140 @@ const AddCustomer = () => {
     };
 
     const handleSubmit = async (event) => {
+        const { firstName, lastName, email, password } = formData;
+
         event.preventDefault();
         try {
-            const response = await axios.post('http://api.example.com/add_customer', formData); // Replace URL with your API endpoint
+            const response = await axios.post('http://146.190.164.174:4000/api/admin/signup_admin', {
+                first_name: firstName,
+                last_name: lastName,
+                email: email,
+                password: password,
+                status: "true"
+            }); 
             console.log('Customer added successfully:', response.data);
-            // Reset form after successful submission
             setFormData({
                 firstName: '',
                 lastName: '',
                 email: '',
-                industryType: '',
                 password: '',
-                customerType: ''
             });
+            setSuccessAlert(true); 
         } catch (error) {
-            console.error('Error adding customer:', error);
+            console.error('Error adding customer:', error.response);
+            setErrorAlert(true); 
+            setErrorMessage(error.response.data.message); 
         }
     };
+
+    const handleCloseAlert = () => {
+        setSuccessAlert(false); 
+        setErrorAlert(false); 
+        setErrorMessage(''); 
+    };
+const navigate=useNavigate();
+const  handleCancel= () => {
+
+   navigate("/customer")
+}
 
     return (
         <form onSubmit={handleSubmit}>
             <div className="container">
-                <h1>Add Customer</h1>
+                <h1 style={{marginBottom:"50px"}}>Add Customer</h1>
                 <div className="row">
                     <div className="col-lg-6">
                         <TextField
                             fullWidth
+                            name="firstName"
                             className="first-name"
                             id="outlined-basic"
                             label="First Name"
                             type="text"
                             variant="outlined"
-                            name="firstName"
                             value={formData.firstName}
                             onChange={handleInputChange}
                             required
+                            style={{ marginBottom: '30px' }} 
+                            sx={{
+                                maxWidth: '100%',
+                                '& label.Mui-focused': {
+                                    color: '#00A95A',
+                                },
+                                '& .MuiOutlinedInput-root': {
+                                    '&.Mui-focused fieldset': {
+                                        borderColor: '#00A95A',
+                                    },
+                                },
+                            }}
                         />
                         <TextField
                             fullWidth
+                            name="email"
                             className="email"
                             id="outlined-basic"
                             label="Email"
                             type="email"
                             variant="outlined"
-                            name="email"
                             value={formData.email}
                             onChange={handleInputChange}
                             required
+                            style={{ marginBottom: '30px' }}
+                            sx={{
+                                maxWidth: '100%',
+                                '& label.Mui-focused': {
+                                    color: '#00A95A',
+                                },
+                                '& .MuiOutlinedInput-root': {
+                                    '&.Mui-focused fieldset': {
+                                        borderColor: '#00A95A',
+                                    },
+                                },
+                            }} 
                         />
-                        <TextField
-                            fullWidth
-                            className="Industry-type"
-                            id="outlined-basic"
-                            label="Industry Type"
-                            type="text"
-                            variant="outlined"
-                            name="industryType"
-                            value={formData.industryType}
-                            onChange={handleInputChange}
-                        />
+                        
                     </div>
                     <div className="col-lg-6">
                         <TextField
                             fullWidth
+                            name='lastName'
                             className="last-name"
                             id="outlined-basic"
                             label="Last Name"
                             type="text"
                             variant="outlined"
-                            name="lastName"
                             value={formData.lastName}
                             onChange={handleInputChange}
                             required
+                            style={{ marginBottom: '30px' }} 
+                            sx={{
+                                maxWidth: '100%',
+                                '& label.Mui-focused': {
+                                    color: '#00A95A',
+                                },
+                                '& .MuiOutlinedInput-root': {
+                                    '&.Mui-focused fieldset': {
+                                        borderColor: '#00A95A',
+                                    },
+                                },
+                            }}
                         />
                         <FormControl
                             fullWidth
                             className="password"
                             variant="outlined"
+                            style={{ marginBottom: '30px' }} 
+                            sx={{
+                                maxWidth: '100%',
+                                '& label.Mui-focused': {
+                                    color: '#00A95A',
+                                },
+                                '& .MuiOutlinedInput-root': {
+                                    '&.Mui-focused fieldset': {
+                                        borderColor: '#00A95A',
+                                    },
+                                },
+                            }}
                         >
                             <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                             <OutlinedInput
@@ -135,19 +194,8 @@ const AddCustomer = () => {
                                 onChange={handleInputChange}
                             />
                         </FormControl>
-                        <TextField
-                            fullWidth
-                            className="coustmer-type"
-                            id="outlined-basic"
-                            label="Customer Type"
-                            type="text"
-                            variant="outlined"
-                            name="customerType"
-                            value={formData.customerType}
-                            onChange={handleInputChange}
-                        />
                         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-                            <Button variant="outlined" style={{ marginRight: '1rem', color: "#00A95A", border: "1px #00A95A" }}>
+                            <Button onClick={handleCancel} variant="outlined" style={{ marginRight: '1rem', color: "#00A95A", border: "1px #00A95A" }}>
                                 Cancel
                             </Button>
                             <Button type="submit" variant="contained" style={{ backgroundColor: "#00A95A", }}>
@@ -157,6 +205,20 @@ const AddCustomer = () => {
                     </div>
                 </div>
             </div>
+            <Snackbar
+                open={successAlert}
+                autoHideDuration={6000}
+                onClose={handleCloseAlert}
+                message="Customer added successfully"
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            />
+            <Snackbar
+                open={errorAlert}
+                autoHideDuration={6000}
+                onClose={handleCloseAlert}
+                message={errorMessage}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            />
         </form>
     );
 }

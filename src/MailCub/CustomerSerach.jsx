@@ -7,7 +7,11 @@ const SearchBar = ({ fetchData }) => {
 
     const handleSearch = async () => {
         try {
-            const response = await axios.get(`http://146.190.164.174:4000/api/customer/search_customer`);
+            const token = localStorage.getItem("token")
+            const headers = {
+                'x-sh-auth': token,
+            };
+            const response = await axios.get(`http://146.190.164.174:4000/api/customer/search_customer`, { headers: headers });
             fetchData(response.data);
         } catch (error) {
             console.error('Error searching:', error.response);
@@ -27,18 +31,19 @@ const SearchBar = ({ fetchData }) => {
     return (
         <div>
             <TextField
+                fullWidth
                 label="Search customer....."
-                variant="outlined"
+                type="text"
                 value={searchQuery}
-                onChange={handleInputChange}
-                onKeyPress={handleKeyPress}
-                style={{
+                onKeyDown={handleKeyPress}
+                sx={{
+                    maxWidth: '100%',
                     '& label.Mui-focused': {
-                        color: '#00A95A',
+                        color: '#00A95A !important', 
                     },
                     '& .MuiOutlinedInput-root': {
                         '&.Mui-focused fieldset': {
-                            borderColor: '#00A95A',
+                            borderColor: '#00A95A !important',
                         },
                     },
                 }}

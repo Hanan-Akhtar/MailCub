@@ -37,6 +37,7 @@
   display: flex;
   justify-content: end;
 }
+
 .error-message {
   color: #d32f2f;
 }
@@ -132,32 +133,14 @@
   background-color: gray;
 }
 
-/* add customer strt here  */
-.sign-up .first-name {
+
+/* forgot password */
+.forgot-password {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lo-go {
   margin-bottom: 20px;
 }
-
-.sign-up .last-name {
-  margin-bottom: 20px;
-}
-
-.sign-up .phoneNumber {
-  margin-bottom: 20px;
-}
-
-.sign-up .password {
-  margin-bottom: 20px;
-}
-
-.sign-up .email {
-  margin-bottom: 20px;
-}
-
-.customer-type {
-  margin-bottom: 10px;
-}
-
-.industry-type {
-  margin-bottom: 10px;
-}
- 
