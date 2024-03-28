@@ -39,6 +39,8 @@ const SignUp = () => {
     });
     const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
+    const apiUrl = process.env.REACT_APP_API_URL;
+
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -100,7 +102,7 @@ const SignUp = () => {
         const headers = { "Content-Type": "application/json" };
 
         try {
-            const response = await axios.post("http://146.190.164.174:4000/api/admin/signup_admin", reqObj, { headers });
+            const response = await axios.post(`${apiUrl}api/admin/signup_admin`, reqObj, { headers });
             if (response.status === 200) {
                 localStorage.setItem('token', response.data.token);
                 setSuccessMessage('Account created successfully!');

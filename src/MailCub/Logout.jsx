@@ -1,13 +1,14 @@
 import axios from 'axios';
 
 export const logout = async (navigate, ) => {
+    const apiUrl = process.env.REACT_APP_API_URL;
     try {
         const token=localStorage.getItem("token")
         const headers = {
             'x-sh-auth': token,
         };
         console.log(token,"token---")
-        const response = await axios.get("http://146.190.164.174:4000/api/app_api/logout", { headers: headers });
+        const response = await axios.get(`${apiUrl}api/app_api/logout`, { headers: headers });
         if (response.status === 200) {
             localStorage.removeItem('token');
             localStorage.removeItem('email');

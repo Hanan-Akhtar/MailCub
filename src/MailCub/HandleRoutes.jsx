@@ -6,9 +6,10 @@ import SignUp from './SignUp';
 import SignIn from './SignIn';
 import DashBoardLayOut from '../Layouts/DashBoardLayOut';
 import ForgotPassword from './Forgot';
-import { isAuthenticated, login, logout } from './Auth'; 
+import { isAuthenticated } from './Auth'; 
 import ColumnGroupingTable from './Customer'
 import Authenticated from '../Layouts/Authentication';
+import EditCustomer from './EditCustomer';
 
 const HandleRoutes = () => {
 
@@ -16,14 +17,20 @@ const HandleRoutes = () => {
     if (isAuthenticated()) {
       return null;
     } else {
-      // Redirect to sign-in page if not authenticated
       if (path !== '/signIn') {
-        // Only redirect if the current path is not the sign-in page
+       
         return <Navigate to="/signIn" />;
       } else {
-        return null; // Render nothing if already on the sign-in page
+        return null; 
       }
     }
+  };
+  const PrivateRoute = ({ element, ...props }) => {
+    return isAuthenticated() ? (
+      <Route {...props} element={element} />
+    ) : (
+      <Navigate to="/signIn" replace />
+    );
   };
 
   return (
@@ -33,6 +40,7 @@ const HandleRoutes = () => {
         <Route path="/dashboard" element={<GridAutoFlow />} />
         <Route path="/customer" element={<ColumnGroupingTable />} />
         <Route path="/addcustomer" element={<AddCustomer />} />
+        <Route path="/edit-customer/:customerId" element={<EditCustomer />} />
       </Route>
       <Route element={<Authenticated/>}>
       <Route path="/" element={<Authentication />} />

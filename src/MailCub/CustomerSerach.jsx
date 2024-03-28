@@ -4,23 +4,25 @@ import axios from 'axios';
 
 const SearchBar = ({ fetchData }) => {
     const [searchQuery, setSearchQuery] = useState('');
+    const apiUrl = process.env.REACT_APP_API_URL;
+
 
     const handleSearch = async () => {
         try {
-            const token = localStorage.getItem("token")
+            const token = localStorage.getItem("token");
             const headers = {
                 'x-sh-auth': token,
             };
-            const response = await axios.get(`http://146.190.164.174:4000/api/customer/search_customer`, { headers: headers });
+            const response = await axios.get(`${apiUrl}api/customer/search_customer`,{}, { headers: headers });
+            console.log('Search Response:', response.data); 
             fetchData(response.data);
         } catch (error) {
             console.error('Error searching:', error.response);
         }
     };
-
     const handleInputChange = event => {
         setSearchQuery(event.target.value);
-    };
+    }
 
     const handleKeyPress = event => {
         if (event.key === 'Enter') {
@@ -35,6 +37,7 @@ const SearchBar = ({ fetchData }) => {
                 label="Search customer....."
                 type="text"
                 value={searchQuery}
+                onChange={handleInputChange}
                 onKeyDown={handleKeyPress}
                 sx={{
                     maxWidth: '100%',

@@ -23,6 +23,8 @@ const SignIn = () => {
     const [passwordError, setPasswordError] = useState('');
     const [signInError, setSignInError] = useState('');
     const navigate = useNavigate();
+    const apiUrl = process.env.REACT_APP_API_URL;
+
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -58,7 +60,7 @@ const SignIn = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post("http://146.190.164.174:4000/api/app_api/login", {
+            const response = await axios.post(`${apiUrl}api/app_api/login`, {
                 email: email,
                 password: password,
                 type: 0

@@ -1,25 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { TextField, Snackbar, Button } from "@mui/material";
-import IconButton from '@mui/material/IconButton';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Autocomplete from '@mui/material/Autocomplete';
 
-const AddCustomer = () => {
-    const [showPassword, setShowPassword] = useState(false);
+const EditCustomer = ({ customerData }) => {
+    console.log(customerData,"customerDatacustomerData")
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        industryType: '',
-        customerType: ''
+        firstName: customerData.first_name ? customerData.first_name : '',
+        lastName: customerData.last_name ? customerData.last_name :'',
+        email: customerData.user._email ? customerData.user._email :'',
+        profileImage: customerData.profile_image ? customerData.profile_image :'',
+        phoneNumber: customerData.phone_number ? customerData.phone_number :'',
+        industryType: customerData.industry_type ? customerData.industry_type : ''
     });
     const [successAlert, setSuccessAlert] = useState(false);
     const [errorAlert, setErrorAlert] = useState(false);
@@ -27,11 +20,8 @@ const AddCustomer = () => {
     const apiUrl = process.env.REACT_APP_API_URL;
 
 
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
+
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -39,20 +29,24 @@ const AddCustomer = () => {
     };
 
     const handleSubmit = async (event) => {
-        const { firstName, lastName, email, password, industryType, customerType } = formData;
+        const { firstName, lastName, email, industryType, phoneNumber, profileImage } = formData;
 
         event.preventDefault();
         try {
-            const response = await axios.post(`${apiUrl}api/customer/signup_customer`, {
+            const token = localStorage.getItem("token")
+            const headers = {
+                'x-sh-auth': token,
+            };
+            const response = await axios.put(`${apiUrl}api/customer/edit_customer_by_admin/${customerData.user._id}`, {
                 first_name: firstName,
                 last_name: lastName,
                 email: email,
-                password: password,
                 industry_type: industryType,
-                customer_type: customerType,
-            });
+                phone_number: phoneNumber,
+                profile_image: profileImage
+            }, { headers: headers });
             console.log('Customer added successfully:', response.data);
-          
+
             setSuccessAlert(true);
         } catch (error) {
             console.error('Error adding customer:', error.response);
@@ -67,16 +61,13 @@ const AddCustomer = () => {
         setErrorMessage('');
     };
 
-    const navigate = useNavigate();
-    const handleCancel = () => {
-        navigate("/customer");
-    };
+
 
     return (
         <>
             <form onSubmit={handleSubmit}>
                 <div className="container">
-                    <h1 style={{ marginBottom: "50px" }}>Add Customer</h1>
+                    <h1 style={{ marginBottom: "50px" }}>Edit Customer</h1>
                     <div className="row">
                         <div className="col-lg-6">
                             <TextField
@@ -105,7 +96,6 @@ const AddCustomer = () => {
                                 required
                                 style={{ marginBottom: '30px' }}
                             />
-                            {/* Autocomplete for Industry Type */}
                             <Autocomplete
                                 fullWidth
                                 options={['Software', 'Healthcare', 'Education']}  // Your suggestion list
@@ -131,48 +121,36 @@ const AddCustomer = () => {
                                 required
                                 style={{ marginBottom: '30px' }}
                             />
-                            <FormControl
+                            <TextField
                                 fullWidth
-                                className="password"
+                                name="profileImage"
+                                className="profile-image"
+                                id="outlined-basic"
+                                label="profile-image"
+                                type="text"
                                 variant="outlined"
+                                value={formData.profileImage}
+                                onChange={handleInputChange}
+                                required
                                 style={{ marginBottom: '30px' }}
-                            >
-                                <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-                                <OutlinedInput
-                                    id="outlined-adornment-password"
-                                    type={showPassword ? 'text' : 'password'}
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                onClick={handleClickShowPassword}
-                                                onMouseDown={handleMouseDownPassword}
-                                                edge="end"
-                                            >
-                                                {showPassword ? <VisibilityOff /> : <Visibility />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
-                                    label="Password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleInputChange}
-                                />
-                            </FormControl>
-                            <Autocomplete
+                            />
+                            <TextField
                                 fullWidth
-                                options={['App', 'Web']}  
-                                renderInput={(params) => <TextField {...params} label="Customer Type" variant="outlined" />}
-                                value={formData.customerType}
-                                onChange={(event, newValue) => {
-                                    setFormData({ ...formData, customerType: newValue });
-                                }}
+                                name='phoneNumber'
+                                className="phoneNumber"
+                                id="outlined-basic"
+                                label="phoneNumber"
+                                type="number"
+                                variant="outlined"
+                                value={formData.phoneNumber}
+                                onChange={handleInputChange}
+                                required
                                 style={{ marginBottom: '30px' }}
                             />
                         </div>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-                        <Button onClick={handleCancel} variant="outlined" style={{ marginRight: '1rem', color: "#00A95A", border: "1px #00A95A" }}>
+                        <Button variant="outlined" style={{ marginRight: '1rem', color: "#00A95A", border: "1px #00A95A" }}>
                             Cancel
                         </Button>
                         <Button type="submit" variant="contained" style={{ backgroundColor: "#00A95A", }}>
@@ -185,7 +163,7 @@ const AddCustomer = () => {
                 open={successAlert}
                 autoHideDuration={6000}
                 onClose={handleCloseAlert}
-                message="Customer added successfully"
+                message="Customer edit successfully"
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             />
             <Snackbar
@@ -199,4 +177,4 @@ const AddCustomer = () => {
     );
 }
 
-export default AddCustomer;
+export default EditCustomer;

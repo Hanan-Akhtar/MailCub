@@ -7,6 +7,8 @@ import axios from 'axios';
 const Dashboard = () => {
     const [verifiedDomains, setVerifiedDomains] = useState(0);
     const [unverifiedDomains, setUnverifiedDomains] = useState(0);
+    const apiUrl = process.env.REACT_APP_API_URL;
+
 
     useEffect(() => {
         fetchData();
@@ -18,7 +20,7 @@ const Dashboard = () => {
             const headers = {
               'x-sh-auth': token,
           };
-            const response = await axios.get('http://146.190.164.174:4000/api/customer/get_customers', { headers: headers });
+            const response = await axios.get(`${apiUrl}api/customer/get_customers`,{} ,{ headers: headers });
             setVerifiedDomains(response.data.verified);
             setUnverifiedDomains(response.data.unverified);
             console.log("successful",response.data)

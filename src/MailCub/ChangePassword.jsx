@@ -16,6 +16,8 @@ const ChangePasswordForm = ({ token }) => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
+  const apiUrl = process.env.REACT_APP_API_URL;
+
 
   const handleTogglePasswordVisibility = (field) => {
     switch (field) {
@@ -50,7 +52,7 @@ const ChangePasswordForm = ({ token }) => {
         new_password: newPassword,
         confirm_password: confirmNewPassword,
       };
-      const response = await axios.put('http://146.190.164.174:4000/api/app_api/change_password', reqObj, {
+      const response = await axios.put(`${apiUrl}api/app_api/change_password`, reqObj, {
         headers: headers,
       });
       
