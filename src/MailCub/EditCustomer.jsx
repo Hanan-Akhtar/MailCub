@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router';
 import { TextField, Snackbar, Button } from "@mui/material";
 import Autocomplete from '@mui/material/Autocomplete';
 
-const EditCustomer = ({ customerData }) => {
-    console.log(customerData,"customerDatacustomerData")
+const EditCustomer = ({ customerData, handleClose }) => {
     const [formData, setFormData] = useState({
         firstName: customerData.first_name ? customerData.first_name : '',
         lastName: customerData.last_name ? customerData.last_name :'',
@@ -18,10 +16,6 @@ const EditCustomer = ({ customerData }) => {
     const [errorAlert, setErrorAlert] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const apiUrl = process.env.REACT_APP_API_URL;
-
-
-
-
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -48,6 +42,7 @@ const EditCustomer = ({ customerData }) => {
             console.log('Customer added successfully:', response.data);
 
             setSuccessAlert(true);
+            handleClose(); 
         } catch (error) {
             console.error('Error adding customer:', error.response);
             setErrorAlert(true);
@@ -94,6 +89,7 @@ const EditCustomer = ({ customerData }) => {
                                 value={formData.email}
                                 onChange={handleInputChange}
                                 required
+                                readOnly
                                 style={{ marginBottom: '30px' }}
                             />
                             <Autocomplete
@@ -150,13 +146,13 @@ const EditCustomer = ({ customerData }) => {
                         </div>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-                        <Button variant="outlined" style={{ marginRight: '1rem', color: "#00A95A", border: "1px #00A95A" }}>
-                            Cancel
-                        </Button>
-                        <Button type="submit" variant="contained" style={{ backgroundColor: "#00A95A", }}>
-                            Save
-                        </Button>
-                    </div>
+                    <Button variant="outlined" style={{ marginRight: '1rem', color: "#00A95A", border: "1px #00A95A" }} onClick={handleClose}>
+                        Cancel
+                    </Button>
+                    <Button type="submit" variant="contained" style={{ backgroundColor: "#00A95A" }}>
+                        Save
+                    </Button>
+                </div>
                 </div>
             </form>
             <Snackbar

@@ -76,11 +76,6 @@ const ResponsiveDrawer = (props) => {
   const navigate = useNavigate();
   const handleLogout = async () => {
     const success = await logout(navigate);
-    if (success) {
-      navigate( './signIn');
-    } else {
-      console.error('Logout failed.');
-    }
   };
 
   // handle password change
@@ -110,34 +105,7 @@ const ResponsiveDrawer = (props) => {
         <Link to={"./signIn"}><img src={brandLogo} style={{ width: '50%' }} /></Link>
       </Toolbar>
       <Divider />
-      <List>
-        <ListItem
-          key={'Profile'}
-          disablePadding
-          sx={{
-            '&:hover': {
-              '& .MuiListItemIcon-root': {
-                color: '#00A95A',
-              },
-              '& .MuiListItemText-primary': {
-                color: '#00A95A',
-              },
-            },
-            textDecoration: 'none',
-            padding: 'none'
-          }}
-        >
-          <ListItemButton
-            component={Link}
-            to={'/profile'}
-          >
-            <ListItemIcon>
-              <AccountCircleIcon />
-            </ListItemIcon>
-            <ListItemText primary={'Profile'} />
-          </ListItemButton>
-        </ListItem>
-      </List>
+     
       <List>
         {[
           { menuItem: 'Dashboard', icon: <InboxIcon />, path: '/dashboard' },

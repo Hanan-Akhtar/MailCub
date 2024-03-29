@@ -9,13 +9,14 @@ import ForgotPassword from './Forgot';
 import { isAuthenticated } from './Auth'; 
 import ColumnGroupingTable from './Customer'
 import Authenticated from '../Layouts/Authentication';
-import EditCustomer from './EditCustomer';
 
 const HandleRoutes = () => {
 
   const Authentication = ({ path }) => {
-    if (isAuthenticated()) {
-      return null;
+    const auth=isAuthenticated()
+    console.log(auth,"test123")
+    if (auth) {
+      return <GridAutoFlow /> ;
     } else {
       if (path !== '/signIn') {
        
@@ -25,22 +26,15 @@ const HandleRoutes = () => {
       }
     }
   };
-  const PrivateRoute = ({ element, ...props }) => {
-    return isAuthenticated() ? (
-      <Route {...props} element={element} />
-    ) : (
-      <Navigate to="/signIn" replace />
-    );
-  };
+
 
   return (
     <Routes>
       <Route element={<DashBoardLayOut />}>
         <Route path="/" element={<Authentication />} />
-        <Route path="/dashboard" element={<GridAutoFlow />} />
+        <Route path="/dashboard" element={<Authentication />} />
         <Route path="/customer" element={<ColumnGroupingTable />} />
         <Route path="/addcustomer" element={<AddCustomer />} />
-        <Route path="/edit-customer/:customerId" element={<EditCustomer />} />
       </Route>
       <Route element={<Authenticated/>}>
       <Route path="/" element={<Authentication />} />

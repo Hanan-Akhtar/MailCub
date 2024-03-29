@@ -18,10 +18,13 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import CircularProgress from '@mui/material/CircularProgress'; 
+import CircularProgress from '@mui/material/CircularProgress';
 import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
 import MuiAlert from '@mui/material/Alert';
 import EditCustomerForm from './EditCustomer';
+
 
 const columns = [
   { id: '_id', label: 'ID', minWidth: 170 },
@@ -37,61 +40,61 @@ const columns = [
 export default function StickyHeadTable() {
   const [page, setPage] = useState(0);
   const apiUrl = process.env.REACT_APP_API_URL;
-  console.log(apiUrl,"-------api")
-  
+  console.log(apiUrl, "-------api")
+
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [customers, setCustomers] = useState([]);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
   const [deleteSuccess, setDeleteSuccess] = useState(false);
-  const [loading, setLoading] = useState(true); 
-  const [openEditDialog, setOpenEditDialog] = useState(false); 
+  const [loading, setLoading] = useState(true);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
   const [customerData, setCustomerData] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchCustomers();
   }, []);
-// handle one edit function
+  // handle one edit function
   const handleOpenEdit = (customerId) => {
     const selectedCustomer = customers.find(customer => customer.user._id === customerId);
-    if(selectedCustomer){
+    if (selectedCustomer) {
       setOpenEditDialog(true);
-      setCustomerData(selectedCustomer); 
-      console.log(selectedCustomer,"data--")
+      setCustomerData(selectedCustomer);
+      console.log(selectedCustomer, "data--")
     }
     else {
       console.log("Customer not found")
     }
   };
-  
-// handle closerdit
+
+  // handle closerdit
   const handleCloseEdit = () => {
     setOpenEditDialog(false);
     setSelectedCustomerId(null);
   };
-// api calling get customer
-const fetchCustomers = async () => {
-  try {
-    const token = localStorage.getItem('token');
-    const headers = {
-      'x-sh-auth': token,
-    };
+  // api calling get customer
+  const fetchCustomers = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const headers = {
+        'x-sh-auth': token,
+      };
 
-    const response = await axios.post(
-      `${apiUrl}api/customer/get_customers`, 
-      {},
-      { headers: headers }
-    );
-    setCustomers(response.data.customer);
-    setLoading(false); 
-  } catch (error) {
-    console.error('Error fetching customers:', error.response);
-    setLoading(false);
-  }
-};
+      const response = await axios.post(
+        `${apiUrl}api/customer/get_customers`,
+        {},
+        { headers: headers }
+      );
+      setCustomers(response.data.customer);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching customers:', error.response);
+      setLoading(false);
+    }
+  };
 
-// handle add customer
+  // handle add customer
   const handleAddCustomer = async () => {
     try {
       navigate('/addCustomer');
@@ -99,7 +102,7 @@ const fetchCustomers = async () => {
       console.error('Error adding customer:', error);
     }
   };
-
+  //handle delete customer
   const handleDeleteCustomer = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -151,138 +154,142 @@ const fetchCustomers = async () => {
           startIcon={<AddIcon />}
           sx={{
             backgroundColor: '#00A95A',
-            color:'white',
+            color: 'white',
             '&:hover': {
-            backgroundColor: '#00753e',
+              backgroundColor: '#00753e',
             },
-            }}
-            >
-            Add Customer
-            </Button>
-            </div>
-            <div className="d-flex align-item-center justify-content-between" style={{ marginBottom: '30px' }}>
-    <h1>Customer</h1>
-    <SearchBar />
-  </div>
+          }}
+        >
+          Add Customer
+        </Button>
+      </div>
+      <div className="d-flex align-item-center justify-content-between" style={{ marginBottom: '30px' }}>
+        <h1>Customer</h1>
+        <SearchBar />
+      </div>
 
-  {loading ? ( 
-    <CircularProgress className='d-flex align-item-center' style={{ margin: 'auto', color:"#00A95A"}} />
-  ) : (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}>
-                  {column.label}
-                </TableCell>
-              ))}
-              <TableCell align="right">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-              return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
-                  {columns.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.id === 'email' ? row.user.email : row[column.id]}
-                      </TableCell>
-                    );
-                  })}
-                  <TableCell align="right">
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      startIcon={<DeleteIcon />}
-                      onClick={() => handleConfirmDelete(row.user._id)}
-                    >
-                      Delete
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={() => handleOpenEdit(row.user._id)}
-                    >
-                      Edit
-                    </Button>
-                  </TableCell>
+      {loading ? (
+        <CircularProgress className='d-flex align-item-center' style={{ margin: 'auto', color: "#00A95A" }} />
+      ) : (
+        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+          <TableContainer sx={{ maxHeight: 440 }}>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  {columns.map((column) => (
+                    <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}>
+                      {column.label}
+                    </TableCell>
+                  ))}
+                  <TableCell align="right">Actions</TableCell>
                 </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={customers.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
-  )}
+              </TableHead>
+              <TableBody>
+                {customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                  return (
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
+                      {columns.map((column) => {
+                        const value = row[column.id];
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            {column.id === 'email' ? row.user.email : row[column.id]}
+                          </TableCell>
+                        );
+                      })}
+                      <TableCell align="right">
+                        {/* delete button strt here */}
+                        <IconButton
+                          variant="outlined"
+                          color="error"
+                          onClick={() => handleConfirmDelete(row.user._id)}
+                          size="small"
+                        >
+                          <DeleteIcon />
+                        </IconButton>
 
-  <Dialog
-    open={openDeleteDialog}
-    onClose={() => setOpenDeleteDialog(false)}
-    aria-labelledby="alert-dialog-title"
-    aria-describedby="alert-dialog-description"
-  >
-    <DialogTitle id="alert-dialog-title" sx={{ color: '#00A95A' }}>{"Confirm Deletion"}</DialogTitle>
-    <DialogContent>
-      <DialogContentText id="alert-dialog-description">
-        Are you sure you want to delete this customer?
-      </DialogContentText>
-    </DialogContent>
-    <DialogActions>
-      <Button
-        sx={{
-          backgroundColor: "#dc3545",
-          color: "white",
-          '&:hover': {
-            backgroundColor: "#ae0c1c",
-          },
-        }}
-        onClick={() => setOpenDeleteDialog(false)}
-        color="primary"
+                        {/* edit button strt here */}
+                        <IconButton
+                          onClick={() => handleOpenEdit(row.user._id)}
+                          size="small"
+                          color="primary"
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            component="div"
+            count={customers.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+      )}
+      {/* delte dialog open */}
+      <Dialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
       >
-        Cancel
-      </Button>
-      <Button
-        sx={{
-          backgroundColor: "#00A95A",
-          color: "white",
-          '&:hover': {
-            backgroundColor: "#00753e",
-          },
-        }}
-        onClick={handleDeleteCustomer}
-        autoFocus
+        <DialogTitle id="alert-dialog-title" sx={{ color: '#00A95A' }}>{"Confirm Deletion"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this customer?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            sx={{
+              backgroundColor: "#dc3545",
+              color: "white",
+              '&:hover': {
+                backgroundColor: "#ae0c1c",
+              },
+            }}
+            onClick={() => setOpenDeleteDialog(false)}
+            color="primary"
+          >
+            Cancel
+          </Button>
+          <Button
+            sx={{
+              backgroundColor: "#00A95A",
+              color: "white",
+              '&:hover': {
+                backgroundColor: "#00753e",
+              },
+            }}
+            onClick={handleDeleteCustomer}
+            autoFocus
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar open={deleteSuccess} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        <MuiAlert elevation={6} variant="filled" onClose={handleCloseSnackbar} severity="success">
+          Customer deleted successfully.
+        </MuiAlert>
+      </Snackbar>
+      {/* edit dialog open */}
+      <Dialog
+        open={openEditDialog}
+        onClose={handleCloseEdit}
+        aria-labelledby="edit-customer-dialog-title"
       >
-        Delete
-      </Button>
-    </DialogActions>
-  </Dialog>
+        <EditCustomerForm customerData={customerData} handleClose={handleCloseEdit} />
+      </Dialog>
 
-  <Snackbar open={deleteSuccess} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-    <MuiAlert elevation={6} variant="filled" onClose={handleCloseSnackbar} severity="success">
-      Customer deleted successfully.
-    </MuiAlert>
-  </Snackbar>
-
-  <Dialog
-  open={openEditDialog}
-  onClose={handleCloseEdit}
-  aria-labelledby="edit-customer-dialog-title"
->
-  <EditCustomerForm customerData={customerData} handleClose={handleCloseEdit} />
-</Dialog>
-</>
-
-  )}
+    </>
+  );
+}  

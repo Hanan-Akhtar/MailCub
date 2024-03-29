@@ -6,20 +6,20 @@ const SearchBar = ({ fetchData }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const apiUrl = process.env.REACT_APP_API_URL;
 
-
     const handleSearch = async () => {
         try {
             const token = localStorage.getItem("token");
             const headers = {
                 'x-sh-auth': token,
             };
-            const response = await axios.get(`${apiUrl}api/customer/search_customer`,{}, { headers: headers });
-            console.log('Search Response:', response.data); 
+            const response = await axios.get(`${apiUrl}api/customer/search_customer`, { headers: headers });
+            console.log('Search Response:', response.data);
             fetchData(response.data);
         } catch (error) {
             console.error('Error searching:', error.response);
         }
     };
+
     const handleInputChange = event => {
         setSearchQuery(event.target.value);
     }
@@ -39,19 +39,20 @@ const SearchBar = ({ fetchData }) => {
                 value={searchQuery}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyPress}
-                sx={{
-                    maxWidth: '100%',
-                    '& label.Mui-focused': {
-                        color: '#00A95A !important', 
-                    },
-                    '& .MuiOutlinedInput-root': {
-                        '&.Mui-focused fieldset': {
-                            borderColor: '#00A95A !important',
-                        },
-                    },
+                InputLabelProps={{
+                    style: {
+                        color: '#00A95A'
+                    }
+                }}
+                InputProps={{
+                    style: {
+                        color: '#00A95A',
+                        '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#00A95A'
+                        }
+                    }
                 }}
             />
-
         </div>
     );
 };
