@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextField } from "@mui/material";
+import { TextField, CircularProgress } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -38,6 +38,7 @@ const SignUp = () => {
         password: ''
     });
     const [successMessage, setSuccessMessage] = useState('');
+    const [loading, setLoading] = useState(false); // State for loader
     const navigate = useNavigate();
     const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -67,6 +68,7 @@ const SignUp = () => {
 
     const handleSignUp = async (event) => {
         event.preventDefault();
+        setLoading(true); // Set loading to true when sign-up process starts
         const { firstName, lastName, email, password } = formData;
         const newErrors = { firstName: '', lastName: '', email: '', password: '' };
 
@@ -88,6 +90,7 @@ const SignUp = () => {
 
         if (Object.values(newErrors).some((error) => error !== '')) {
             setErrors(newErrors);
+            setLoading(false); // Set loading to false if there are validation errors
             return;
         }
 
@@ -126,6 +129,8 @@ const SignUp = () => {
             } else {
                 setErrors({ ...newErrors, general: 'An unexpected error occurred. Please try again later.' });
             }
+        } finally {
+            setLoading(false); // Set loading to false when sign-up process is finished
         }
     };
 
@@ -305,20 +310,26 @@ const SignUp = () => {
                                     </Alert>
                                 )}
 
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    fullWidth
-                                    sx={{
-                                        backgroundColor: "#00A95A",
-                                        marginTop: "20px",
-                                        '&:hover': {
-                                            backgroundColor: "#00753e",
-                                        },
-                                    }}
-                                >
-                                    Create my account
-                                </Button>
+                                {loading ? (
+                                    <div className="spinner-border text-success" role="status">
+                                        <span className="visually-hidden">Loading...</span>
+                                    </div>
+                                ) : (
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        fullWidth
+                                        sx={{
+                                            backgroundColor: "#00A95A",
+                                            marginTop: "20px",
+                                            '&:hover': {
+                                                backgroundColor: "#00753e",
+                                            },
+                                        }}
+                                    >
+                                        Sign in
+                                    </Button>
+                                )}
                             </form>
 
                         </div>

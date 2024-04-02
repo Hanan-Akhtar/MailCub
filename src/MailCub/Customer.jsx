@@ -42,7 +42,7 @@ export default function StickyHeadTable() {
   const apiUrl = process.env.REACT_APP_API_URL;
   console.log(apiUrl, "-------api")
 
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(4);
   const [customers, setCustomers] = useState([]);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
@@ -52,9 +52,30 @@ export default function StickyHeadTable() {
   const [customerData, setCustomerData] = useState(null);
   const navigate = useNavigate();
 
+  // pagination api
   useEffect(() => {
-    fetchCustomers();
-  }, []);
+    fetchData();
+  }, [page]);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      const headers = {
+        'x-sh-auth': token,
+      };
+
+      const response = await axios.post(
+        `${apiUrl}api/customer/get_customers?page=${page+1}&limit=${rowsPerPage}`,{},
+        { headers: headers }
+      );
+      console.log("response--",response.data.customer)
+      setCustomers(response.data.customer);
+    } catch (error) {
+      console.error('Error fetching customers:', error.response);
+    } finally {
+      setLoading(false);
+    }
+  };
   // handle one edit function
   const handleOpenEdit = (customerId) => {
     const selectedCustomer = customers.find(customer => customer.user._id === customerId);
@@ -74,6 +95,9 @@ export default function StickyHeadTable() {
     setSelectedCustomerId(null);
   };
   // api calling get customer
+  useEffect(() => {
+    fetchCustomers();
+  }, []);
   const fetchCustomers = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -129,6 +153,7 @@ export default function StickyHeadTable() {
   };
 
   const handleChangePage = (newPage) => {
+    console.log('New page:', newPage);
     setPage(newPage);
   };
 
@@ -223,7 +248,7 @@ export default function StickyHeadTable() {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
+            rowsPerPageOptions={[5, 10, 15, 50, 100]}
             component="div"
             count={customers.length}
             rowsPerPage={rowsPerPage}
