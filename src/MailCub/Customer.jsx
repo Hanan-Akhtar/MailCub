@@ -27,7 +27,7 @@ import EditCustomerForm from './EditCustomer';
 
 
 const columns = [
-  { id: '_id', label: 'ID', minWidth: 170 },
+  { id: '#', label: '#', minWidth: 170 },
   { id: 'first_name', label: 'First Name', minWidth: 170 },
   { id: 'last_name', label: 'Last Name', minWidth: 170 },
   { id: 'email', label: 'Email', minWidth: 170 },
@@ -41,8 +41,8 @@ export default function StickyHeadTable() {
   const [page, setPage] = useState(0);
   const apiUrl = process.env.REACT_APP_API_URL;
   console.log(apiUrl, "-------api")
-
-  const [rowsPerPage, setRowsPerPage] = useState(4);
+  const [totalCustomers, setTotalCustomers] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [customers, setCustomers] = useState([]);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
@@ -53,29 +53,43 @@ export default function StickyHeadTable() {
   const navigate = useNavigate();
 
   // pagination api
-  useEffect(() => {
-    fetchData();
-  }, [page]);
+  const handleChangePage = (event, newPage) => {
+    setLoading(true);
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setLoading(true);
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+
   const fetchData = async () => {
+
+
     try {
-      setLoading(true);
       const token = localStorage.getItem('token');
       const headers = {
         'x-sh-auth': token,
       };
 
       const response = await axios.post(
-        `${apiUrl}api/customer/get_customers?page=${page+1}&limit=${rowsPerPage}`,{},
+        `${apiUrl}api/customer/get_customers?page=${page}&limit=${rowsPerPage}`,
+        {},
         { headers: headers }
       );
-      console.log("response--",response.data.customer)
       setCustomers(response.data.customer);
+      setTotalCustomers(response.data.count);
+      setLoading(false);
+      console.log(rowsPerPage, "rowss--")
     } catch (error) {
       console.error('Error fetching customers:', error.response);
-    } finally {
       setLoading(false);
     }
+
   };
+
   // handle one edit function
   const handleOpenEdit = (customerId) => {
     const selectedCustomer = customers.find(customer => customer.user._id === customerId);
@@ -94,29 +108,8 @@ export default function StickyHeadTable() {
     setOpenEditDialog(false);
     setSelectedCustomerId(null);
   };
-  // api calling get customer
-  useEffect(() => {
-    fetchCustomers();
-  }, []);
-  const fetchCustomers = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const headers = {
-        'x-sh-auth': token,
-      };
 
-      const response = await axios.post(
-        `${apiUrl}api/customer/get_customers`,
-        {},
-        { headers: headers }
-      );
-      setCustomers(response.data.customer);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching customers:', error.response);
-      setLoading(false);
-    }
-  };
+
 
   // handle add customer
   const handleAddCustomer = async () => {
@@ -126,6 +119,7 @@ export default function StickyHeadTable() {
       console.error('Error adding customer:', error);
     }
   };
+
   //handle delete customer
   const handleDeleteCustomer = async () => {
     try {
@@ -140,7 +134,7 @@ export default function StickyHeadTable() {
       );
 
       if (response.status === 200) {
-        fetchCustomers();
+        fetchData();
         setDeleteSuccess(true);
       } else {
         console.error('Failed to delete customer:', response.data);
@@ -152,16 +146,6 @@ export default function StickyHeadTable() {
     }
   };
 
-  const handleChangePage = (newPage) => {
-    console.log('New page:', newPage);
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
   const handleConfirmDelete = (customerId) => {
     setSelectedCustomerId(customerId);
     setOpenDeleteDialog(true);
@@ -170,7 +154,9 @@ export default function StickyHeadTable() {
   const handleCloseSnackbar = () => {
     setDeleteSuccess(false);
   };
-
+  useEffect(() => {
+    fetchData();
+  }, [page, rowsPerPage]);
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'end', marginBottom: '30px' }}>
@@ -193,36 +179,38 @@ export default function StickyHeadTable() {
         <SearchBar />
       </div>
 
-      {loading ? (
-        <CircularProgress className='d-flex align-item-center' style={{ margin: 'auto', color: "#00A95A" }} />
-      ) : (
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-          <TableContainer sx={{ maxHeight: 440 }}>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
+      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+        <TableContainer sx={{ maxHeight: 440 }}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow>
+                {columns.map((column) => (
+                  <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}>
+                    {column.label}
+                  </TableCell>
+                ))}
+                <TableCell align="right">Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {loading ? (
                 <TableRow>
-                  {columns.map((column) => (
-                    <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}>
-                      {column.label}
-                    </TableCell>
-                  ))}
-                  <TableCell align="right">Actions</TableCell>
+                  <TableCell colSpan={columns.length} align="center">
+                    <CircularProgress style={{ color: "#00A95A" }} />
+                  </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+              ) : (
+                customers.map((row, index) => {
+                  const currentIndex = page * rowsPerPage + index + 1;
                   return (
                     <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
-                      {columns.map((column) => {
-                        const value = row[column.id];
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.id === 'email' ? row.user.email : row[column.id]}
-                          </TableCell>
-                        );
-                      })}
+                      <TableCell>{currentIndex}</TableCell>
+                      {columns.slice(1).map((column) => (
+                        <TableCell key={column.id} align={column.align}>
+                          {column.id === 'email' ? row.user.email : row[column.id]}
+                        </TableCell>
+                      ))}
                       <TableCell align="right">
-                        {/* delete button strt here */}
                         <IconButton
                           variant="outlined"
                           color="error"
@@ -231,8 +219,6 @@ export default function StickyHeadTable() {
                         >
                           <DeleteIcon />
                         </IconButton>
-
-                        {/* edit button strt here */}
                         <IconButton
                           onClick={() => handleOpenEdit(row.user._id)}
                           size="small"
@@ -243,22 +229,24 @@ export default function StickyHeadTable() {
                       </TableCell>
                     </TableRow>
                   );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 15, 50, 100]}
-            component="div"
-            count={customers.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Paper>
-      )}
-      {/* delte dialog open */}
+                })
+              )}
+            </TableBody>
+
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[1, 2, 3, 5]}
+          component="div"
+          count={customers.length ? totalCustomers : 0}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+
+      {/* Delete confirmation dialog */}
       <Dialog
         open={openDeleteDialog}
         onClose={() => setOpenDeleteDialog(false)}
@@ -301,12 +289,14 @@ export default function StickyHeadTable() {
         </DialogActions>
       </Dialog>
 
+      {/* Snackbar for delete success */}
       <Snackbar open={deleteSuccess} autoHideDuration={6000} onClose={handleCloseSnackbar}>
         <MuiAlert elevation={6} variant="filled" onClose={handleCloseSnackbar} severity="success">
           Customer deleted successfully.
         </MuiAlert>
       </Snackbar>
-      {/* edit dialog open */}
+
+      {/* Edit dialog */}
       <Dialog
         open={openEditDialog}
         onClose={handleCloseEdit}
@@ -314,7 +304,6 @@ export default function StickyHeadTable() {
       >
         <EditCustomerForm customerData={customerData} handleClose={handleCloseEdit} />
       </Dialog>
-
     </>
   );
-}  
+}

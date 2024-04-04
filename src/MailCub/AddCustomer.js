@@ -13,6 +13,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 const AddCustomer = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -42,6 +43,7 @@ const AddCustomer = () => {
         const { firstName, lastName, email, password, industryType, customerType } = formData;
 
         event.preventDefault();
+        setLoading(true);
         try {
             const response = await axios.post(`${apiUrl}api/customer/signup_customer`, {
                 first_name: firstName,
@@ -52,13 +54,14 @@ const AddCustomer = () => {
                 customer_type: customerType,
             });
             console.log('Customer added successfully:', response.data);
-          
+
             setSuccessAlert(true);
         } catch (error) {
             console.error('Error adding customer:', error.response);
             setErrorAlert(true);
             setErrorMessage(error.response.data.message);
         }
+        setLoading(false);
     };
 
     const handleCloseAlert = () => {
@@ -161,7 +164,7 @@ const AddCustomer = () => {
                             </FormControl>
                             <Autocomplete
                                 fullWidth
-                                options={['App', 'Web']}  
+                                options={['App', 'Web']}
                                 renderInput={(params) => <TextField {...params} label="Customer Type" variant="outlined" />}
                                 value={formData.customerType}
                                 onChange={(event, newValue) => {
@@ -175,9 +178,19 @@ const AddCustomer = () => {
                         <Button onClick={handleCancel} variant="outlined" style={{ marginRight: '1rem', color: "#00A95A", border: "1px #00A95A" }}>
                             Cancel
                         </Button>
-                        <Button type="submit" variant="contained" style={{ backgroundColor: "#00A95A", }}>
-                            Save
-                        </Button>
+                        {loading ? (
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <div className="spinner-border text-success" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        ) : (
+                            <Button type="submit" variant="contained" style={{ backgroundColor: "#00A95A" }}>
+                                Save
+                            </Button>
+                        )}
+
+
                     </div>
                 </div>
             </form>

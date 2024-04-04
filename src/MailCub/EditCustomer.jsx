@@ -7,7 +7,7 @@ const EditCustomer = ({ customerData, handleClose }) => {
     const [formData, setFormData] = useState({
         firstName: customerData.first_name ? customerData.first_name : '',
         lastName: customerData.last_name ? customerData.last_name : '',
-        email: customerData.user._email ? customerData.user._email : '',
+        email: customerData.user.email ? customerData.user.email : '',
         profileImage: customerData.profile_image ? customerData.profile_image : '',
         phoneNumber: customerData.phone_number ? customerData.phone_number : '',
         industryType: customerData.industry_type ? customerData.industry_type : ''
@@ -107,7 +107,6 @@ const EditCustomer = ({ customerData, handleClose }) => {
                                 type="email"
                                 variant="outlined"
                                 value={formData.email}
-                                onChange={handleInputChange}
                                 required
                                 style={{ marginBottom: '30px' }}
                                 readOnly  
@@ -125,7 +124,7 @@ const EditCustomer = ({ customerData, handleClose }) => {
                                 },
                             }}
                                 fullWidth
-                                options={['Software', 'Healthcare', 'Education']}  // Your suggestion list
+                                options={['Software', 'Healthcare', 'Education']} 
                                 renderInput={(params) => <TextField {...params} label="Industry Type" variant="outlined" />}
                                 value={formData.industryType}
                                 onChange={(event, newValue) => {

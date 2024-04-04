@@ -17,29 +17,31 @@ import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import brandLogo from "../Asserts/Images/logo.png"
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { logout } from './Logout';
-import ChangePasswordForm from './ChangePassword'; 
+import ChangePasswordForm from './ChangePassword';
 import { useNavigate } from 'react-router-dom';
 import Modal from '@mui/material/Modal';
-import { useState } from 'react'; 
+import { useState } from 'react';
 
 const drawerWidth = 240;
 
 const ResponsiveDrawer = (props) => {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isClosing, setIsClosing] =useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const userEmail = localStorage.getItem('email');
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -73,7 +75,6 @@ const ResponsiveDrawer = (props) => {
   };
 
   // handle logout
-  const navigate = useNavigate();
   const handleLogout = async () => {
     const success = await logout(navigate);
   };
@@ -89,7 +90,7 @@ const ResponsiveDrawer = (props) => {
       });
       if (success) {
         alert('Password changed successfully!');
-        setIsModalOpen(false); 
+        setIsModalOpen(false);
       } else {
         alert('Failed to change password. Please try again.');
       }
@@ -105,7 +106,7 @@ const ResponsiveDrawer = (props) => {
         <Link to={"./signIn"}><img src={brandLogo} style={{ width: '50%' }} /></Link>
       </Toolbar>
       <Divider />
-     
+
       <List>
         {[
           { menuItem: 'Dashboard', icon: <InboxIcon />, path: '/dashboard' },
@@ -115,14 +116,6 @@ const ResponsiveDrawer = (props) => {
             key={text.menuItem}
             disablePadding
             sx={{
-              '&:hover': {
-                '& .MuiListItemIcon-root': {
-                  color: '#00A95A',
-                },
-                '& .MuiListItemText-primary': {
-                  color: '#00A95A',
-                },
-              },
               textDecoration: 'none',
               padding: 'none'
             }}
@@ -130,6 +123,20 @@ const ResponsiveDrawer = (props) => {
             <ListItemButton
               component={Link}
               to={text.path}
+              selected={location.pathname === text.path}
+              sx={{
+                '&.Mui-selected': {
+                  color: '#00A95A',
+                },
+                '&:hover': {
+                  '& .MuiListItemIcon-root': {
+                    color: '#00A95A',
+                  },
+                  '& .MuiListItemText-primary': {
+                    color: '#00A95A',
+                  },
+                },
+              }}
             >
               <ListItemIcon>
                 {index % 2 === 0 ? <AccessAlarmIcon /> : <MailIcon />}
@@ -141,7 +148,7 @@ const ResponsiveDrawer = (props) => {
       </List>
     </div>
   );
-  
+
 
 
   const container = window !== undefined ? () => window().document.body : undefined;
@@ -185,7 +192,7 @@ const ResponsiveDrawer = (props) => {
                 sx: {
                   '& .MuiMenuItem-root': {
                     '&:hover': {
-                      color: '#00A95A', 
+                      color: '#00A95A',
                     },
                   },
                 },
@@ -208,8 +215,8 @@ const ResponsiveDrawer = (props) => {
               </MenuItem>
             </Menu>
           </div>
-       
-          </Toolbar>
+
+        </Toolbar>
       </AppBar>
 
       <Box
