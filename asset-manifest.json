@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/MailCub/static/css/main.04cf99ff.css",
+    "main.js": "/MailCub/static/js/main.affce860.js",
+    "static/js/453.40d56944.chunk.js": "/MailCub/static/js/453.40d56944.chunk.js",
+    "static/media/login-image.jpeg": "/MailCub/static/media/login-image.2103f583005cd0048a90.jpeg",
+    "static/media/logo.png": "/MailCub/static/media/logo.0db02881c49e1949032d.png",
+    "index.html": "/MailCub/index.html",
+    "main.04cf99ff.css.map": "/MailCub/static/css/main.04cf99ff.css.map",
+    "main.affce860.js.map": "/MailCub/static/js/main.affce860.js.map",
+    "453.40d56944.chunk.js.map": "/MailCub/static/js/453.40d56944.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.04cf99ff.css",
+    "static/js/main.affce860.js"
+  ]
+}
