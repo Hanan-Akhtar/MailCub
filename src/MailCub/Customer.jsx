@@ -19,10 +19,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import CircularProgress from '@mui/material/CircularProgress';
-import Snackbar from '@mui/material/Snackbar';
+import { Snackbar, Alert } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
-import MuiAlert from '@mui/material/Alert';
 import EditCustomerForm from './EditCustomer';
 
 
@@ -185,11 +184,11 @@ export default function StickyHeadTable() {
             <TableHead>
               <TableRow>
                 {columns.map((column) => (
-                  <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}>
+                  <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth,backgroundColor:"lightgrey" }}>
                     {column.label}
                   </TableCell>
                 ))}
-                <TableCell align="right">Actions</TableCell>
+                <TableCell style={{backgroundColor:"lightgray"}} align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -290,10 +289,14 @@ export default function StickyHeadTable() {
       </Dialog>
 
       {/* Snackbar for delete success */}
-      <Snackbar open={deleteSuccess} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-        <MuiAlert elevation={6} variant="filled" onClose={handleCloseSnackbar} severity="success">
+      <Snackbar
+        open={deleteSuccess}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success">
           Customer deleted successfully.
-        </MuiAlert>
+        </Alert>
       </Snackbar>
 
       {/* Edit dialog */}

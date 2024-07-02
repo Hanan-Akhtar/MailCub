@@ -77,6 +77,7 @@ const ResponsiveDrawer = (props) => {
   // handle logout
   const handleLogout = async () => {
     const success = await logout(navigate);
+    console.log('success',success.data)
   };
 
   // handle password change
@@ -92,18 +93,20 @@ const ResponsiveDrawer = (props) => {
         alert('Password changed successfully!');
         setIsModalOpen(false);
       } else {
+        console.error('Failed to change password.');
         alert('Failed to change password. Please try again.');
       }
     } catch (error) {
-      console.error('Error changing password:', error.response);
+      console.error('Error changing password:', error);
       alert('Failed to change password. Please try again.');
     }
   };
 
+
   const drawer = (
     <div>
       <Toolbar>
-        <Link to={"./signIn"}><img src={brandLogo} style={{ width: '50%' }} /></Link>
+        <Link to={"./signIn"}><img src={brandLogo} alt='logo' style={{ width: '50%' }} /></Link>
       </Toolbar>
       <Divider />
 
@@ -188,15 +191,14 @@ const ResponsiveDrawer = (props) => {
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleProfileMenuClose}
-              PaperProps={{
-                sx: {
-                  '& .MuiMenuItem-root': {
-                    '&:hover': {
-                      color: '#00A95A',
-                    },
+              sx={{
+                '& .MuiMenuItem-root': {
+                  '&:hover': {
+                    color: '#00A95A',
                   },
                 },
-              }}
+              }
+              }
             >
               <MenuItem onClick={handleProfileMenuClose}>
                 <Typography variant="inherit" noWrap>
@@ -276,6 +278,7 @@ const ResponsiveDrawer = (props) => {
           <ChangePasswordForm
             oldPassword={oldPassword}
             newPassword={newPassword}
+            confirmPassword={confirmPassword}
             setOldPassword={setOldPassword}
             setNewPassword={setNewPassword}
             setConfirmPassword={setConfirmPassword}

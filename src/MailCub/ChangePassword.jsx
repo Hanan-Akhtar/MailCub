@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import "../App.css"
 
-const ChangePasswordForm = ({ token }) => {
+const ChangePasswordForm = () => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
@@ -61,11 +61,11 @@ const ChangePasswordForm = ({ token }) => {
       setNewPassword('');
       setConfirmNewPassword('');
       setErrorMessage('');
-      return true; // Return true on success
+      return true; 
     } catch (error) {
       console.error('Error changing password:', error.response);
       setErrorMessage('Error changing password. Please try again.');
-      return false; // Return false on failure
+      return false; 
     }
   };
 
@@ -94,7 +94,7 @@ const ChangePasswordForm = ({ token }) => {
         InputProps={{
           endAdornment: (
             <IconButton onClick={() => handleTogglePasswordVisibility('oldPassword')} edge="end">
-              {showOldPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+              {showOldPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
             </IconButton>
           ),
         }}
@@ -122,7 +122,7 @@ const ChangePasswordForm = ({ token }) => {
         InputProps={{
           endAdornment: (
             <IconButton onClick={() => handleTogglePasswordVisibility('newPassword')} edge="end">
-              {showNewPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+              {showNewPassword ? <VisibilityIcon /> : <VisibilityOffIcon /> }
             </IconButton>
           ),
         }}
@@ -150,7 +150,7 @@ const ChangePasswordForm = ({ token }) => {
         InputProps={{
           endAdornment: (
             <IconButton onClick={() => handleTogglePasswordVisibility('confirmNewPassword')} edge="end">
-              {showConfirmNewPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+              {showConfirmNewPassword ? <VisibilityIcon /> :  <VisibilityOffIcon />}
             </IconButton>
           ),
         }}

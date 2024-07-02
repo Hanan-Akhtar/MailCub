@@ -2,7 +2,7 @@ import { Outlet } from "react-router";
 import { isNotAuthenticated } from '../MailCub/Auth'; 
 import { Navigate } from 'react-router-dom';
 
-const PrivateLayout = () => {
+const PublicLayout = () => {
   const auth = isNotAuthenticated(); 
 
   return <>
@@ -10,4 +10,4 @@ const PrivateLayout = () => {
   </>;
 }
  
-export default PrivateLayout;
+export default PublicLayout;

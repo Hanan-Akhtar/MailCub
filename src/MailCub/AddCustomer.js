@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
-import { TextField, Snackbar, Button } from "@mui/material";
+import { TextField, Snackbar, Button,Alert  } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -84,6 +84,16 @@ const AddCustomer = () => {
                         <div className="col-lg-6">
                             <TextField
                                 fullWidth
+                                sx={{
+                                    '& label.Mui-focused': {
+                                        color: '#00A95A',
+                                    },
+                                    '& .MuiOutlinedInput-root': {
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#00A95A',
+                                        },
+                                    },
+                                }}
                                 name="firstName"
                                 className="first-name"
                                 id="outlined-basic"
@@ -97,6 +107,16 @@ const AddCustomer = () => {
                             />
                             <TextField
                                 fullWidth
+                                sx={{
+                                    '& label.Mui-focused': {
+                                        color: '#00A95A',
+                                    },
+                                    '& .MuiOutlinedInput-root': {
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#00A95A',
+                                        },
+                                    },
+                                }}
                                 name="email"
                                 className="email"
                                 id="outlined-basic"
@@ -111,6 +131,16 @@ const AddCustomer = () => {
                             {/* Autocomplete for Industry Type */}
                             <Autocomplete
                                 fullWidth
+                                sx={{
+                                    '& label.Mui-focused': {
+                                        color: '#00A95A',
+                                    },
+                                    '& .MuiOutlinedInput-root': {
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#00A95A',
+                                        },
+                                    },
+                                }}
                                 options={['Software', 'Healthcare', 'Education']}  // Your suggestion list
                                 renderInput={(params) => <TextField {...params} label="Industry Type" variant="outlined" />}
                                 value={formData.industryType}
@@ -123,6 +153,16 @@ const AddCustomer = () => {
                         <div className="col-lg-6">
                             <TextField
                                 fullWidth
+                                sx={{
+                                    '& label.Mui-focused': {
+                                        color: '#00A95A',
+                                    },
+                                    '& .MuiOutlinedInput-root': {
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#00A95A',
+                                        },
+                                    },
+                                }}
                                 name='lastName'
                                 className="last-name"
                                 id="outlined-basic"
@@ -136,6 +176,16 @@ const AddCustomer = () => {
                             />
                             <FormControl
                                 fullWidth
+                                sx={{
+                                    '& label.Mui-focused': {
+                                        color: '#00A95A',
+                                    },
+                                    '& .MuiOutlinedInput-root': {
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#00A95A',
+                                        },
+                                    },
+                                }}
                                 className="password"
                                 variant="outlined"
                                 style={{ marginBottom: '30px' }}
@@ -164,6 +214,16 @@ const AddCustomer = () => {
                             </FormControl>
                             <Autocomplete
                                 fullWidth
+                                sx={{
+                                    '& label.Mui-focused': {
+                                        color: '#00A95A',
+                                    },
+                                    '& .MuiOutlinedInput-root': {
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#00A95A',
+                                        },
+                                    },
+                                }}
                                 options={['App', 'Web']}
                                 renderInput={(params) => <TextField {...params} label="Customer Type" variant="outlined" />}
                                 value={formData.customerType}
@@ -198,16 +258,23 @@ const AddCustomer = () => {
                 open={successAlert}
                 autoHideDuration={6000}
                 onClose={handleCloseAlert}
-                message="Customer added successfully"
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            />
+            >
+                <Alert onClose={handleCloseAlert} severity="success">
+                    Customer added successfully
+                </Alert>
+            </Snackbar>
+
             <Snackbar
                 open={errorAlert}
                 autoHideDuration={6000}
                 onClose={handleCloseAlert}
-                message={errorMessage}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            />
+            >
+                <Alert onClose={handleCloseAlert} severity="error">
+                    {errorMessage}
+                </Alert>
+            </Snackbar>
         </>
     );
 }

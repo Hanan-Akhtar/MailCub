@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { TextField, Snackbar, Button } from "@mui/material";
+import { Snackbar, Alert } from "@mui/material";
+
+import { TextField,  Button } from "@mui/material";
 import Autocomplete from '@mui/material/Autocomplete';
 
 const EditCustomer = ({ customerData, handleClose }) => {
@@ -40,9 +42,8 @@ const EditCustomer = ({ customerData, handleClose }) => {
                 profile_image: profileImage
             }, { headers: headers });
             console.log('Customer added successfully:', response.data);
-
-            setSuccessAlert(true);
             handleClose();
+            setSuccessAlert(true);
         } catch (error) {
             console.error('Error adding customer:', error.response);
             setErrorAlert(true);
@@ -66,16 +67,16 @@ const EditCustomer = ({ customerData, handleClose }) => {
                     <div className="row">
                         <div className="col-lg-6">
                             <TextField
-                            sx={{
-                                '& label.Mui-focused': {
-                                    color: '#00A95A',
-                                },
-                                '& .MuiOutlinedInput-root': {
-                                    '&.Mui-focused fieldset': {
-                                        borderColor: '#00A95A',
+                                sx={{
+                                    '& label.Mui-focused': {
+                                        color: '#00A95A',
                                     },
-                                },
-                            }}
+                                    '& .MuiOutlinedInput-root': {
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#00A95A',
+                                        },
+                                    },
+                                }}
                                 fullWidth
                                 name="firstName"
                                 className="first-name"
@@ -89,16 +90,16 @@ const EditCustomer = ({ customerData, handleClose }) => {
                                 style={{ marginBottom: '30px' }}
                             />
                             <TextField
-                            sx={{
-                                '& label.Mui-focused': {
-                                    color: '#00A95A',
-                                },
-                                '& .MuiOutlinedInput-root': {
-                                    '&.Mui-focused fieldset': {
-                                        borderColor: '#00A95A',
+                                sx={{
+                                    '& label.Mui-focused': {
+                                        color: '#00A95A',
                                     },
-                                },
-                            }}
+                                    '& .MuiOutlinedInput-root': {
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#00A95A',
+                                        },
+                                    },
+                                }}
                                 fullWidth
                                 name="email"
                                 className="email"
@@ -109,22 +110,22 @@ const EditCustomer = ({ customerData, handleClose }) => {
                                 value={formData.email}
                                 required
                                 style={{ marginBottom: '30px' }}
-                                readOnly  
+                                readOnly
 
                             />
                             <Autocomplete
-                            sx={{
-                                '& label.Mui-focused': {
-                                    color: '#00A95A',
-                                },
-                                '& .MuiOutlinedInput-root': {
-                                    '&.Mui-focused fieldset': {
-                                        borderColor: '#00A95A',
+                                sx={{
+                                    '& label.Mui-focused': {
+                                        color: '#00A95A',
                                     },
-                                },
-                            }}
+                                    '& .MuiOutlinedInput-root': {
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#00A95A',
+                                        },
+                                    },
+                                }}
                                 fullWidth
-                                options={['Software', 'Healthcare', 'Education']} 
+                                options={['Software', 'Healthcare', 'Education']}
                                 renderInput={(params) => <TextField {...params} label="Industry Type" variant="outlined" />}
                                 value={formData.industryType}
                                 onChange={(event, newValue) => {
@@ -135,16 +136,16 @@ const EditCustomer = ({ customerData, handleClose }) => {
                         </div>
                         <div className="col-lg-6">
                             <TextField
-                            sx={{
-                                '& label.Mui-focused': {
-                                    color: '#00A95A',
-                                },
-                                '& .MuiOutlinedInput-root': {
-                                    '&.Mui-focused fieldset': {
-                                        borderColor: '#00A95A',
+                                sx={{
+                                    '& label.Mui-focused': {
+                                        color: '#00A95A',
                                     },
-                                },
-                            }}
+                                    '& .MuiOutlinedInput-root': {
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#00A95A',
+                                        },
+                                    },
+                                }}
                                 fullWidth
                                 name='lastName'
                                 className="last-name"
@@ -158,16 +159,16 @@ const EditCustomer = ({ customerData, handleClose }) => {
                                 style={{ marginBottom: '30px' }}
                             />
                             <TextField
-                            sx={{
-                                '& label.Mui-focused': {
-                                    color: '#00A95A',
-                                },
-                                '& .MuiOutlinedInput-root': {
-                                    '&.Mui-focused fieldset': {
-                                        borderColor: '#00A95A',
+                                sx={{
+                                    '& label.Mui-focused': {
+                                        color: '#00A95A',
                                     },
-                                },
-                            }}
+                                    '& .MuiOutlinedInput-root': {
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#00A95A',
+                                        },
+                                    },
+                                }}
                                 fullWidth
                                 name="profileImage"
                                 className="profile-image"
@@ -181,16 +182,16 @@ const EditCustomer = ({ customerData, handleClose }) => {
                                 style={{ marginBottom: '30px' }}
                             />
                             <TextField
-                            sx={{
-                                '& label.Mui-focused': {
-                                    color: '#00A95A',
-                                },
-                                '& .MuiOutlinedInput-root': {
-                                    '&.Mui-focused fieldset': {
-                                        borderColor: '#00A95A',
+                                sx={{
+                                    '& label.Mui-focused': {
+                                        color: '#00A95A',
                                     },
-                                },
-                            }}
+                                    '& .MuiOutlinedInput-root': {
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#00A95A',
+                                        },
+                                    },
+                                }}
                                 fullWidth
                                 name='phoneNumber'
                                 className="phoneNumber"
@@ -219,9 +220,12 @@ const EditCustomer = ({ customerData, handleClose }) => {
                 open={successAlert}
                 autoHideDuration={6000}
                 onClose={handleCloseAlert}
-                message="Customer edit successfully"
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            />
+            >
+                <Alert onClose={handleCloseAlert} severity="success" sx={{ backgroundColor: '#4caf50' }}>
+                    Customer added successfully
+                </Alert>
+            </Snackbar>
             <Snackbar
                 open={errorAlert}
                 autoHideDuration={6000}

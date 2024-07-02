@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextField, CircularProgress } from "@mui/material";
+import { TextField } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -105,7 +105,7 @@ const SignUp = () => {
         const headers = { "Content-Type": "application/json" };
 
         try {
-            const response = await axios.post(`http://146.190.164.174:4000/api/admin/signup_admin`, reqObj, { headers });
+            const response = await axios.post(`${apiUrl}api/admin/signup_admin`, reqObj, { headers });
             if (response.status === 200) {
                 localStorage.setItem('token', response.data.token);
                 setSuccessMessage('Account created successfully!');
@@ -142,7 +142,7 @@ const SignUp = () => {
         <div className="row">
             <div className="col-lg-7 d-flex align-items-center">
                 <div className='container'>
-                    <img className="logo" src={brandLogo} style={{ width: "20%" }} />
+                    <img className="logo" alt='logo' src={brandLogo} style={{ width: "20%" }} />
                     <div className="sign-up" >
                         <div>
                             <div className='heading'>
@@ -228,10 +228,6 @@ const SignUp = () => {
                                                 color: '#00A95A',
                                             },
                                             '& .MuiOutlinedInput-root': {
-
-                                                color: '#00A95A',
-                                            },
-                                            '& .MuiOutlinedInput-root': {
                                                 '&.Mui-focused fieldset': {
                                                     borderColor: '#00A95A',
                                                 },
@@ -252,7 +248,7 @@ const SignUp = () => {
                                                         onMouseDown={handleMouseDownPassword}
                                                         edge="end"
                                                     >
-                                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                        {showPassword ?  <Visibility /> : <VisibilityOff />}
                                                     </IconButton>
                                                 </InputAdornment>
                                             }
